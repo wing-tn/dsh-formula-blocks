@@ -20,9 +20,13 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/wing-tn/dsh-formula-blocks"
+    "url": "git+https://github.com/wing-tn/dsh-formula-blocks.git"
   },
   "homepage": "https://github.com/wing-tn/dsh-formula-blocks#readme",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
+  },
   "exports": {
     ".": "./index.js",
     "./client": "./client.js",
