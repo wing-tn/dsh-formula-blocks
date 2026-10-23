@@ -70,6 +70,31 @@ node --check index.js
 node --check client.js
 ```
 
+## 🆕 What's new in 2.0
+
+- **KaTeX publishing preview**: vendored KaTeX 0.16.22 (served locally by the Host), one click **排版预览** renders every row with publication-quality typesetting while editing stays block-based.
+- **Keyboard cursor navigation**: `← ↑ → ↓` moves the selection across the expression tree; `Enter`/double-click edits inline; typing at the cursor inserts/merges as before.
+- **Graph auto-layout**: the graph view now has a one-click **自动布局** reset.
+- **OCR backends**: Mathpix App ID/Key can be configured in Settings (stored locally, sent only to the local Host); pix2tex install command is one click away; local/cloud OCR remains fallible and optional.
+- **Verification visibility**: `/api/health` now reports SymPy and Mathics availability; SymPy remains the default check backend.
+
+## 🔍 How it compares / 同类对比
+
+| | Formula Blocks | DSH math plugins | MathType / Mathcha | SimpleTex / Mathpix | SymPy / Mathematica | Blockly / Simulink |
+|---|---|---|---|---|---|---|
+| Visual block formula editing | ✅ tree + graph | ❌ mostly render/compile | ⚠️ linear WYSIWYG | ❌ | ❌ | ✅ for code/model |
+| Keyboard + inline editing | ✅ | ⚠️ | ✅ | ❌ | ✅ text | ⚠️ |
+| Image → LaTeX | ✅ Agent / optional OCR | ⚠️ generic OCR | ⚠️ | ✅ strong | ❌ | ❌ |
+| Dimension checks | ✅ | ❌ | ❌ | ❌ | ⚠️ | ❌ |
+| Local Python/SymPy verification | ✅ | ❌ | ❌ | ❌ | ✅ strong | ❌ |
+| Reusable custom blocks | ✅ My Blocks | ❌ | ⚠️ templates | ❌ | ❌ | ✅ functions |
+| Projects / history / workspace files | ✅ | ❌ | ⚠️ | ❌ | notebooks | ✅ |
+| Runs inside DeepSeek Harness | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ |
+
+Related DSH plugins worth pairing with: `@ch4acko3/dsh-math-render`, `@jaxzhou/dsh-mathmatic-symbol`, `dsh-latex-tools`, `@hoangthach/dsh-latex`, `dsh-latex-guard`, `dsh-geometry-knowledge`, `@kiwifruit/dsh-scientific-computing`, and generic OCR plugins (`@maxwell-feng/dsh-tesseract-ocr`, `dsh-windows-ocr`, `@anionex/dsh-vision-toolkit`).
+
+General references: [MathType](https://www.mathtype.com), [Mathcha](https://www.mathcha.io), [MathLive](https://mathlive.io), [SimpleTex](https://simpletex.cn), [Mathpix](https://mathpix.com), [pix2tex](https://github.com/lukas-blecher/LaTeX-OCR), [SymPy](https://sympy.org), [SageMath](https://www.sagemath.org), [Blockly](https://github.com/google/blockly), [React Flow](https://github.com/xyflow/xyflow).
+
 ## 📄 License
 
 MIT (see `LICENSE`). Please confirm before publishing if you prefer another license.

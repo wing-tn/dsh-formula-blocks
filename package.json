@@ -1,6 +1,6 @@
 {
   "name": "dsh-formula-blocks",
-  "version": "1.7.0",
+  "version": "2.0.0",
   "private": false,
   "type": "module",
   "description": "Formula Blocks — build, verify and reuse mathematics as visual blocks in DeepSeek Harness (dsh).",
@@ -41,6 +41,7 @@
     "icon.svg",
     "locale/*.json",
     "data/*.json",
+    "assets/**",
     "README.md",
     "LICENSE"
   ],

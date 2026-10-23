@@ -979,7 +979,7 @@ window.__ModuleLoader__.load({
     }
     function loadXp() { return Number(readLS(LS_XP, 0)) || 0; }
     function loadDone() { const d = readLS(LS_DONE, {}); return d && typeof d === 'object' ? d : {}; }
-    const DEFAULT_SETTINGS = { zoomStep: 0.1, showHints: true, mathSize: 27, accent: '#4f8cff', defaultView: 'tree', keepFavorites: true, seenTutorial: false };
+    const DEFAULT_SETTINGS = { zoomStep: 0.1, showHints: true, mathSize: 27, accent: '#4f8cff', defaultView: 'tree', keepFavorites: true, seenTutorial: false, mathpixId: '', mathpixKey: '' };
     function loadSettings() { return Object.assign({}, DEFAULT_SETTINGS, readLS(LS_SETTINGS, {}) || {}); }
     function loadFavorites() { const f = readLS(LS_FAV, []); return Array.isArray(f) ? f : []; }
 
@@ -1219,6 +1219,12 @@ window.__ModuleLoader__.load({
 .fb-tutorial-keys{display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;font-size:10.8px}
 .fb-tutorial-keyrow{display:flex;align-items:center;gap:8px}
 .fb-tutorial-keyrow code{font-family:ui-monospace,Consolas,monospace;background:rgba(148,163,184,.12);border-radius:5px;padding:2px 5px;color:#c3cbdb;white-space:nowrap}
+.fb-katex{font-size:17px;line-height:1.5;overflow-x:auto;padding:4px 2px}
+.fb-katex-fallback{font-family:ui-monospace,Consolas,monospace;font-size:11px;color:var(--dsw-alias-label-secondary,#9aa6bd);white-space:pre-wrap;word-break:break-all;padding:4px 2px}
+.fb-preview-card{width:min(880px,94vw)}
+.fb-preview-row{border-bottom:1px dashed rgba(148,163,184,.16);padding:8px 2px 10px;display:flex;flex-direction:column;gap:4px}
+.fb-preview-row:last-child{border-bottom:0}
+.fb-preview-row-name{font-size:10.5px;color:var(--dsw-alias-label-secondary,#8b95a9)}
 .fb-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
 .fb-item{border:1px solid var(--dsw-alias-border-l1,rgba(255,255,255,.1));background:var(--dsw-alias-bg-layer-2,rgba(255,255,255,.04));border-radius:9px;padding:7px 6px;cursor:grab;display:flex;flex-direction:column;align-items:center;gap:3px;transition:transform .12s ease,border-color .12s ease,background .12s ease;user-select:none;text-align:center}
 .fb-item:hover{transform:translateY(-1px);border-color:var(--fb-c,#4f8cff);background:var(--dsw-alias-bg-overlay,#232a3b)}
@@ -1640,9 +1646,10 @@ window.__ModuleLoader__.load({
       } catch (e) { return KIND_LABEL[node.k] || ''; }
     }
 
-    function GraphView({ root, selectedId, onSelect, onMoveNode }) {
+    function GraphView({ root, selectedId, onSelect, onMoveNode, resetKey }) {
       const layout = useMemo(() => layoutGraph(root), [root]);
       const [pos, setPos] = useState({});
+      useEffect(() => { setPos({}); }, [resetKey]);
       const dragRef = useRef(null);
       const gw = 152;
       const gh = 46;
@@ -1863,6 +1870,23 @@ window.__ModuleLoader__.load({
           h('button', { key: 'x', className: 'fb-iconbtn', onClick: onClose }, '✕'),
         ]),
         h('div', { key: 'b', className: 'fb-modal-body' }, [
+          section('OCR 后端（可选）', [
+            h('div', { key: 'n', className: 'fb-mini' }, 'Mathpix 凭据只保存在本机 localStorage，由 Host 调用 Mathpix API；也可用 pix2tex 本地识别（无需 Key）。'),
+            h('label', { key: 'id', className: 'fb-set-row' }, [
+              h('span', { key: 's' }, 'Mathpix App ID'),
+              h('input', {
+                key: 'i', className: 'fb-insp-input', value: settings.mathpixId || '',
+                onChange: (e) => update({ mathpixId: e.target.value }),
+              }),
+            ]),
+            h('label', { key: 'key', className: 'fb-set-row' }, [
+              h('span', { key: 's' }, 'Mathpix App Key'),
+              h('input', {
+                key: 'i', type: 'password', className: 'fb-insp-input', value: settings.mathpixKey || '',
+                onChange: (e) => update({ mathpixKey: e.target.value }),
+              }),
+            ]),
+          ]),
           section('外观与画布', [
             h('label', { key: 'hint', className: 'fb-set-row' }, [
               h('input', {
@@ -1951,7 +1975,7 @@ window.__ModuleLoader__.load({
           ]),
           section('版权与使用说明', [
             h('div', { key: 'about', className: 'fb-about' }, [
-              h('div', { key: 'v', className: 'fb-about-strong' }, '公式积木 Formula Blocks v1.7.0'),
+              h('div', { key: 'v', className: 'fb-about-strong' }, '公式积木 Formula Blocks v2.0.0'),
               h('div', { key: 'c' }, '© 2026 公式积木插件作者。本插件以 MIT License 发布（可自由使用、修改、分发，保留版权声明）。'),
               h('div', { key: 'd' }, '第三方：React 由 DeepSeek Harness 宿主提供；本插件未打包第三方数学库。公式库中的常量数值参考 CODATA 2022 常用值，仅作计算提示，请以官方发布为准。'),
               h('div', { key: 'u' }, '使用说明：左侧选块或拖入空位拼装；右侧调变量单位/量纲/含义；“关卡”可完成示例；底部复制 LaTeX。数据默认只存本机浏览器，不上传服务器。'),
@@ -2003,7 +2027,7 @@ window.__ModuleLoader__.load({
       ]);
     }
 
-    function ImagePanel({ copy, onLatex, showToast }) {
+    function ImagePanel({ copy, onLatex, showToast, settings }) {
       const [img, setImg] = useState(null);
       const [saved, setSaved] = useState(null);
       const [latex, setLatex] = useState('');
@@ -2055,7 +2079,11 @@ window.__ModuleLoader__.load({
             path = up.path;
             setSaved(up);
           }
-          const res = await apiPost('ocr', { path, mime: img.mime });
+          const res = await apiPost('ocr', {
+            path, mime: img.mime,
+            mathpixId: settings && settings.mathpixId ? settings.mathpixId : '',
+            mathpixKey: settings && settings.mathpixKey ? settings.mathpixKey : '',
+          });
           if (res && res.ok && res.latex) {
             setLatex(res.latex);
             setOcrMsg('识别完成（' + res.backend + '）：已填入下方，核对后导入');
@@ -2083,6 +2111,10 @@ window.__ModuleLoader__.load({
         h('div', { key: 'btns', className: 'fb-set-btns' }, [
           h('button', { key: 's', className: 'fb-toolbtn fb-primary', disabled: busy, onClick: saveAndPrompt }, busy ? '保存中…' : '保存图片并复制识图提示词'),
           h('button', { key: 'o', className: 'fb-toolbtn', disabled: ocrBusy, onClick: runOcr }, ocrBusy ? '识别中…' : '一键识别（本地/云 OCR）'),
+          h('button', {
+            key: 'pix', className: 'fb-toolbtn',
+            onClick: () => copy('python -m pip install -i https://pypi.tuna.tsinghua.edu.cn/simple pix2tex'),
+          }, '复制 pix2tex 安装命令'),
         ]),
         ocrMsg ? h('div', { key: 'ocrmsg', className: 'fb-mini' }, ocrMsg) : null,
         saved ? h('div', { key: 'saved', className: 'fb-mini', style: { wordBreak: 'break-all' } }, '已保存：' + saved.path) : null,
@@ -2099,6 +2131,68 @@ window.__ModuleLoader__.load({
           h('button', { key: 'c', className: 'fb-toolbtn', onClick: () => copy(latex) }, '复制 LaTeX'),
         ]),
       ]);
+    }
+
+    function useKatex() {
+      const [ready, setReady] = useState(typeof window !== 'undefined' && !!window.katex);
+      useEffect(() => {
+        if (ready) return undefined;
+        if (typeof document === 'undefined' || !document.head) return undefined;
+        let script = document.getElementById('fb-katex-script');
+        const onload = () => setReady(!!(window.katex));
+        if (!script) {
+          try {
+            const link = document.createElement('link');
+            link.id = 'fb-katex-css'; link.rel = 'stylesheet';
+            link.href = '/formula-blocks/assets/katex/katex.min.css';
+            document.head.appendChild(link);
+            script = document.createElement('script');
+            script.id = 'fb-katex-script';
+            script.src = '/formula-blocks/assets/katex/katex.min.js';
+            script.onload = onload;
+            document.head.appendChild(script);
+          } catch (e) { return undefined; }
+        } else {
+          script.addEventListener('load', onload);
+        }
+        return () => { try { script.removeEventListener('load', onload); } catch (e) { /* ignore */ } };
+      }, [ready]);
+      return ready;
+    }
+
+    function KatexBlock({ latex }) {
+      const ready = useKatex();
+      const ref = useRef(null);
+      useEffect(() => {
+        if (!ready || !ref.current || !window.katex) return;
+        try {
+          window.katex.render(String(latex || ''), ref.current, { throwOnError: false, displayMode: true, strict: 'ignore' });
+        } catch (e) {
+          try { ref.current.textContent = String(latex || ''); } catch (e2) { /* ignore */ }
+        }
+      }, [ready, latex]);
+      if (!ready) return h('div', { className: 'fb-katex-fallback' }, 'KaTeX 加载中…  ' + String(latex || ''));
+      return h('div', { className: 'fb-katex', ref });
+    }
+
+    function LatexPreviewModal({ project, onClose, copy }) {
+      const rows = project.rows;
+      return h('div', { className: 'fb-modal', onClick: onClose }, h('div', {
+        className: 'fb-modal-card fb-preview-card', onClick: (e) => e.stopPropagation(),
+      }, [
+        h('div', { key: 'h', className: 'fb-modal-head' }, [
+          h('div', { key: 't', className: 'fb-modal-title' }, '排版预览 · KaTeX'),
+          h('button', { key: 'x', className: 'fb-iconbtn', onClick: onClose }, '✕'),
+        ]),
+        h('div', { key: 'b', className: 'fb-modal-body' }, [
+          h('div', { key: 'n', className: 'fb-set-note' }, '用 KaTeX 按出版风格排版当前项目的每一行公式；编辑仍在积木视图中进行。'),
+          ...rows.map((row, i) => h('div', { key: row.id, className: 'fb-preview-row' }, [
+            h('div', { key: 'n', className: 'fb-preview-row-name' }, (i + 1) + '. ' + row.name),
+            h(KatexBlock, { key: 'k', latex: toLatex(row.root) }),
+            h('button', { key: 'c', className: 'fb-toolbtn', onClick: () => copy('$$ ' + toLatex(row.root) + ' $$') }, '复制 $$…$$'),
+          ])),
+        ]),
+      ]));
     }
 
     function InlineEditor({ edit, onCommit, onDelete }) {
@@ -2603,6 +2697,8 @@ window.__ModuleLoader__.load({
       const [pyError, setPyError] = useState('');
       const [reviewOpen, setReviewOpen] = useState(false);
       const [tutorialOpen, setTutorialOpen] = useState(false);
+      const [latexPreviewOpen, setLatexPreviewOpen] = useState(false);
+      const [graphReset, setGraphReset] = useState(0);
       const [lastDrop, setLastDrop] = useState(null);
       const [drag, setDrag] = useState(null);
       const [jellyId, setJellyId] = useState(null);
@@ -3724,6 +3820,16 @@ window.__ModuleLoader__.load({
           else if ((e.ctrlKey || e.metaKey) && String(e.key).toLowerCase() === 'y') { e.preventDefault(); redo(); }
           else if (String(e.key) === 'Delete' || String(e.key) === 'Backspace') { if (selectedId) { e.preventDefault(); deleteSelected(); } }
           else if (String(e.key) === 'Escape') { setSelectedId(null); }
+          else if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].indexOf(String(e.key)) >= 0) {
+            e.preventDefault();
+            const flat = [];
+            (function walk(n) { if (!n) return; flat.push(n.id); childNodes(n).forEach(walk); })(root);
+            if (!flat.length) return;
+            const idx = flat.indexOf(selectedId);
+            const dir = (String(e.key) === 'ArrowRight' || String(e.key) === 'ArrowDown') ? 1 : -1;
+            const next = Math.max(0, Math.min(flat.length - 1, (idx < 0 ? 0 : idx) + dir));
+            setSelectedId(flat[next]);
+          }
           else if (!e.ctrlKey && !e.metaKey && !e.altKey && String(e.key).length === 1) {
             if (inlineEdit || settingsOpen || reviewOpen || latexOpen || pyOpen || pendingImport || historyOpen) return;
             if (insertKeyChar(String(e.key))) e.preventDefault();
@@ -3731,7 +3837,7 @@ window.__ModuleLoader__.load({
         };
         window.addEventListener('keydown', onKey);
         return () => window.removeEventListener('keydown', onKey);
-      }, [open, undo, redo, selectedId, deleteSelected, insertKeyChar, inlineEdit, settingsOpen, reviewOpen, latexOpen, pyOpen, pendingImport, historyOpen]);
+      }, [open, undo, redo, selectedId, deleteSelected, insertKeyChar, inlineEdit, settingsOpen, reviewOpen, latexOpen, pyOpen, pendingImport, historyOpen, root]);
 
       if (!open) return null;
 
@@ -3952,6 +4058,8 @@ window.__ModuleLoader__.load({
               }),
               h('button', { key: 'copy', className: 'fb-toolbtn fb-primary', onClick: () => copy(latex) }, '复制 LaTeX'),
               h('button', { key: 'saveblock', className: 'fb-toolbtn', onClick: openSaveBlock, title: '把选中块或整条公式存为左侧“我的整合块”' }, '★ 存为我的块'),
+              h('button', { key: 'katex', className: 'fb-toolbtn', onClick: () => setLatexPreviewOpen(true), title: '用 KaTeX 查看出版级排版预览' }, '排版预览'),
+              view === 'graph' ? h('button', { key: 'layout', className: 'fb-toolbtn', onClick: () => setGraphReset((n) => n + 1), title: '恢复节点图的自动布局' }, '自动布局') : null,
             ]),
             h(StatusLamps, {
               key: 'status', checks: projectChecks, agentChecked,
@@ -4016,7 +4124,7 @@ window.__ModuleLoader__.load({
                     }),
                     h('button', { key: 'add', className: 'fb-sheet-add', onClick: (e) => { e.stopPropagation(); addRow(); } }, '＋ 添加一行公式'),
                   ])
-                  : h(GraphView, { key: 'g', root, selectedId, onSelect: setSelectedId, onMoveNode: moveSubtree }),
+                  : h(GraphView, { key: 'g', root, selectedId, onSelect: setSelectedId, onMoveNode: moveSubtree, resetKey: graphReset }),
               ]),
               h('div', { key: 'chips', className: 'fb-preview' }, [
                 h('span', { key: 'c1', className: 'fb-chip' + (placeholderCount === 0 ? ' fb-ok' : ' fb-warn') }, placeholderCount === 0 ? '✓ 结构完整' : '○ 还有 ' + placeholderCount + ' 个空位'),
@@ -4076,7 +4184,7 @@ window.__ModuleLoader__.load({
                   : (tab === 'library'
                     ? h(LibraryPanel, { key: 'lib', onInsert: insertFromLibrary })
                     : (tab === 'image'
-                      ? h(ImagePanel, { key: 'img', copy, onLatex: importImageLatex, showToast })
+                      ? h(ImagePanel, { key: 'img', copy, onLatex: importImageLatex, showToast, settings })
                       : h(Properties, { key: 'p', node: selectedNode, doc, root, updateSelected, deleteSelected, wrapSelected, copy })))),
               h('div', { key: 'tpl', style: { marginTop: '12px' } }, [
                 h('div', { key: 'h', className: 'fb-group-title' }, '模板（一键插入）'),
@@ -4197,6 +4305,7 @@ window.__ModuleLoader__.load({
           onClose: () => setHistoryOpen(false), onRestore: restoreHistory,
         }) : null,
         tutorialOpen ? h(TutorialModal, { key: 'tutorial', onClose: () => setTutorialOpen(false) }) : null,
+        latexPreviewOpen ? h(LatexPreviewModal, { key: 'latexpreview', project: doc, onClose: () => setLatexPreviewOpen(false), copy }) : null,
         settingsOpen ? h(SettingsPanel, {
           key: 'settings', settings, update: updateSettings, favorites,
           onClose: () => setSettingsOpen(false), copy,

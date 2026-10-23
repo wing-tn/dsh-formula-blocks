@@ -224,6 +224,46 @@ function sendJson(res, status, body) {
   res.end(text);
 }
 
+const ASSET_TYPES = {
+  '.js': 'text/javascript; charset=utf-8',
+  '.css': 'text/css; charset=utf-8',
+  '.woff2': 'font/woff2',
+  '.woff': 'font/woff',
+  '.ttf': 'font/ttf',
+  '.svg': 'image/svg+xml',
+  '.png': 'image/png',
+  '.json': 'application/json; charset=utf-8',
+};
+
+function registerAssetRoute(webServer) {
+  try {
+    const base = fileURLToPath(new URL('./assets/', import.meta.url));
+    return webServer.register({
+      kind: 'prefix', path: '/formula-blocks/assets',
+      async handler(req, res) {
+        if (req.method !== 'GET' && req.method !== 'HEAD') { res.writeHead(405); res.end(); return; }
+        let rel;
+        try { rel = decodeURIComponent(String(req.url || '').split('?')[0].replace('/formula-blocks/assets/', '')); } catch (e) { res.writeHead(400); res.end(); return; }
+        const file = path.resolve(base, rel);
+        const root = path.resolve(base);
+        if (!file.startsWith(root + path.sep)) { res.writeHead(403); res.end(); return; }
+        const ext = path.extname(file).toLowerCase();
+        if (!ASSET_TYPES[ext]) { res.writeHead(403); res.end(); return; }
+        fs.readFile(file, (err, data) => {
+          if (err) { res.writeHead(404); res.end(); return; }
+          res.writeHead(200, {
+            'content-type': ASSET_TYPES[ext],
+            'cache-control': 'public, max-age=86400',
+            'x-content-type-options': 'nosniff',
+          });
+          res.end(req.method === 'HEAD' ? undefined : data);
+        });
+      },
+    });
+  } catch (e) { return () => {}; }
+}
+
+
 function readBody(req, limitBytes) {
   return new Promise((resolve) => {
     let size = 0;
@@ -307,7 +347,9 @@ function saveImageBuffer(buf, mime) {
 
 async function runOcr(body, py) {
   const env = process.env;
-  if (env.MATHPIX_APP_ID && env.MATHPIX_APP_KEY) {
+  const mpId = body.mathpixId || env.MATHPIX_APP_ID;
+  const mpKey = body.mathpixKey || env.MATHPIX_APP_KEY;
+  if (mpId && mpKey) {
     try {
       const src = body.dataUrl || (body.data ? ('data:' + (body.mime || 'image/png') + ';base64,' + body.data) : null);
       if (!src) return { ok: false, backend: 'mathpix', message: '缺少图片数据' };
@@ -315,8 +357,8 @@ async function runOcr(body, py) {
         method: 'POST',
         headers: {
           'content-type': 'application/json',
-          app_id: env.MATHPIX_APP_ID,
-          app_key: env.MATHPIX_APP_KEY,
+          app_id: mpId,
+          app_key: mpKey,
         },
         body: JSON.stringify({ src, formats: ['latex_styled'], data_options: { include_latex: true } }),
         signal: AbortSignal.timeout(30000),
@@ -358,6 +400,7 @@ async function runOcr(body, py) {
 
 function registerApi(webServer, ctx) {
   const dispose = [];
+  dispose.push(registerAssetRoute(webServer));
   try {
     dispose.push(webServer.register({
       kind: 'exact', path: '/formula-blocks/api/health',
@@ -365,11 +408,18 @@ function registerApi(webServer, ctx) {
         if (!guard(req)) { sendJson(res, 403, { ok: false }); return; }
         const force = String(req.url || '').indexOf('force=1') >= 0;
         const py = await detectPython(force);
+        let mathics = false;
+        if (py.command) {
+          try {
+            const probe = await runPython(py.command.concat(['-c', 'import importlib.util as u;print(1 if u.find_spec("mathics") else 0)']), '', 8000);
+            mathics = probe.ok && String(probe.stdout || '').trim() === '1';
+          } catch (e) { mathics = false; }
+        }
         sendJson(res, 200, {
           ok: true,
           python: py.command
-            ? { available: true, sympy: py.sympy, command: py.command.join(' ') }
-            : { available: false, sympy: false, command: null },
+            ? { available: true, sympy: py.sympy, mathics, command: py.command.join(' ') }
+            : { available: false, sympy: false, mathics: false, command: null },
           tools: scanTools(),
         });
       },
