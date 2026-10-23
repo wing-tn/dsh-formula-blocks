@@ -1,0 +1,3 @@
+- insert:
+    - id: formula-blocks
+      name: '@local/formula-blocks'

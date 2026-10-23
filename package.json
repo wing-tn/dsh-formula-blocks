@@ -1,0 +1,56 @@
+{
+  "name": "dsh-formula-blocks",
+  "version": "1.7.0",
+  "private": false,
+  "type": "module",
+  "description": "Formula Blocks — build, verify and reuse mathematics as visual blocks in DeepSeek Harness (dsh).",
+  "keywords": [
+    "deepseek-harness",
+    "dsh",
+    "dsh-plugin",
+    "formula",
+    "math",
+    "latex",
+    "sympy",
+    "visual-editor",
+    "physics",
+    "education"
+  ],
+  "author": "wing-tn",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wing-tn/dsh-formula-blocks"
+  },
+  "homepage": "https://github.com/wing-tn/dsh-formula-blocks#readme",
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg",
+    "./data/*.json": "./data/*.json"
+  },
+  "files": [
+    "index.js",
+    "client.js",
+    "cordis.patch.yml",
+    "icon.svg",
+    "locale/*.json",
+    "data/*.json",
+    "README.md",
+    "LICENSE"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "immediately": true,
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-conversation",
+        "@deepseek-ai/dsh-client-ui-sidebar-right"
+      ]
+    }
+  }
+}

@@ -1,0 +1,1000 @@
+{
+  "version": 1,
+  "count": 59,
+  "formulas": [
+    {
+      "id": "mech-newton-2",
+      "title": "合外力等于动量对时间的导数",
+      "domain": "物理/经典力学/牛顿力学",
+      "level": "基础",
+      "latex": "\\mathbf{F}=\\frac{\\mathrm{d}\\mathbf{p}}{\\mathrm{d}t}",
+      "meaning": "合外力等于动量对时间的导数，是牛顿第二定律的普遍形式（比 F=ma 更一般，适用于变质量与非惯性情形需修正）。",
+      "variables": {
+        "F": "合外力 (N)",
+        "p": "动量 (kg·m·s^-1)",
+        "t": "时间 (s)"
+      },
+      "dimension": "M L T^-2",
+      "source": "https://en.wikipedia.org/wiki/List_of_equations_in_classical_mechanics",
+      "notes": "核验等级 B：web_search 返回该页正文片段（含 F=dp/dt 与 F=ma 的对照）；本会话直连 wikipedia.org 返回 HTTP 404，公式文本按标准形式录入。若需按质量不变的常见写法，可另存 F=ma 作为等价条目。"
+    },
+    {
+      "id": "mech-momentum",
+      "title": "质点动量等于质量与速度之积",
+      "domain": "物理/经典力学/牛顿力学",
+      "level": "基础",
+      "latex": "\\mathbf{p}=m\\mathbf{v}",
+      "meaning": "质点动量等于质量与速度之积，是牛顿力学中描述运动状态的基本量。",
+      "variables": {
+        "p": "动量 (kg·m·s^-1)",
+        "m": "质量 (kg)",
+        "v": "速度 (m·s^-1)"
+      },
+      "dimension": "M L T^-1",
+      "source": "https://en.wikipedia.org/wiki/List_of_equations_in_classical_mechanics",
+      "notes": "核验等级 B：同页列表给出 p=mv 及动量守恒表述。"
+    },
+    {
+      "id": "mech-work",
+      "title": "力沿路径的线积分给出该力做的功",
+      "domain": "物理/经典力学/功与能",
+      "level": "基础",
+      "latex": "W=\\int_{A}^{B}\\mathbf{F}\\cdot\\mathrm{d}\\mathbf{r}",
+      "meaning": "力沿路径的线积分给出该力做的功，是动能定理与势能定义的出发点。",
+      "variables": {
+        "W": "功 (J)",
+        "F": "力 (N)",
+        "r": "位移 (m)"
+      },
+      "dimension": "M L^2 T^-2",
+      "source": "https://en.wikipedia.org/wiki/Work_(physics)",
+      "notes": "核验等级 B：该页给出 W=∫F·dr 与 F·d 特例；本会话直连 404，按标准形式录入。"
+    },
+    {
+      "id": "mech-kinetic-energy",
+      "title": "平动动能等于质量乘速度平方的一半",
+      "domain": "物理/经典力学/功与能",
+      "level": "派生",
+      "latex": "E_{k}=\\tfrac{1}{2}mv^{2}",
+      "meaning": "平动动能等于质量乘速度平方的一半，由对合外力沿路径积分并用牛顿第二定律得到。",
+      "variables": {
+        "E_k": "动能 (J)",
+        "m": "质量 (kg)",
+        "v": "速度 (m·s^-1)"
+      },
+      "dimension": "M L^2 T^-2",
+      "source": "https://en.wikipedia.org/wiki/Kinetic_energy",
+      "notes": "核验等级 B（页面/主题级，见 md 核验说明）。推导要点：dE_k = F·dr = (dp/dt)·dr = v·dp = m v·dv ⇒ E_k=½mv²；仅适用于 v≪c 的非相对论情形。"
+    },
+    {
+      "id": "mech-gravitation",
+      "title": "两质点间万有引力与质量乘积成正比、与距离平方成反比",
+      "domain": "物理/经典力学/引力",
+      "level": "基础",
+      "latex": "\\mathbf{F}_{12}=-G\\frac{m_{1}m_{2}}{r_{12}^{2}}\\hat{\\mathbf{r}}_{12}",
+      "meaning": "两质点间万有引力与质量乘积成正比、与距离平方成反比，方向沿连线相互吸引。",
+      "variables": {
+        "F_12": "1 受到的引力 (N)",
+        "G": "万有引力常数 (m^3·kg^-1·s^-2)",
+        "m_1": "质量 1 (kg)",
+        "m_2": "质量 (kg)",
+        "r_12": "两质点距离 (m)",
+        "r_hat": "单位方向矢量 (无量纲)"
+      },
+      "dimension": "M L T^-2",
+      "source": "https://physics.nist.gov/cuu/Constants/Table/allascii.txt",
+      "notes": "核验等级 A（一侧）：常量表已核实 G = 6.67430e-11 m^3 kg^-1 s^-2 (u_r=2.2e-5)；公式本身经 web_search 在 Wikipedia 页面确认（等级 B）。量纲自检：G m1 m2 / r^2 = (M^-1 L^3 T^-2)(M^2)/L^2 = M L T^-2。"
+    },
+    {
+      "id": "mech-hooke",
+      "title": "弹性限度内弹簧回复力与伸长量成正比且方向相反",
+      "domain": "物理/经典力学/弹性力学",
+      "level": "基础",
+      "latex": "\\mathbf{F}=-k\\mathbf{x}",
+      "meaning": "弹性限度内弹簧回复力与伸长量成正比且方向相反，是简谐振动方程的本构输入。",
+      "variables": {
+        "F": "回复力 (N)",
+        "k": "劲度系数 (N·m^-1)",
+        "x": "相对平衡位置的位移 (m)"
+      },
+      "dimension": "M L T^-2",
+      "source": "https://en.wikipedia.org/wiki/Hooke%27s_law",
+      "notes": "核验等级 B；一维形式，三维推广为张量形式 σ=C:ε。"
+    },
+    {
+      "id": "mech-shm",
+      "title": "胡克力作用下的质点位移随时间作简谐振荡",
+      "domain": "物理/经典力学/振动",
+      "level": "派生",
+      "latex": "x(t)=A\\cos(\\omega t+\\varphi),\\qquad \\omega=\\sqrt{\\frac{k}{m}}",
+      "meaning": "胡克力作用下的质点位移随时间作简谐振荡，角频率由劲度系数与质量之比决定。",
+      "variables": {
+        "x": "位移 (m)",
+        "t": "时间 (s)",
+        "A": "振幅 (m)",
+        "omega": "角频率 (rad·s^-1)",
+        "phi": "初相位 (rad)",
+        "k": "劲度系数 (N·m^-1)",
+        "m": "质量 (kg)"
+      },
+      "dimension": "L",
+      "source": "https://en.wikipedia.org/wiki/Harmonic_oscillator",
+      "notes": "核验等级 B（页面/主题级，见 md 核验说明）。推导要点：m x'' = -k x ⇒ x''+ω²x=0，ω=√(k/m)；量纲自检：√(N/m / kg)=√(s^-2)=s^-1。"
+    },
+    {
+      "id": "mech-torque",
+      "title": "刚体定轴转动时合外力矩等于转动惯量乘角加速度",
+      "domain": "物理/经典力学/转动",
+      "level": "派生",
+      "latex": "\\boldsymbol{\\tau}=I\\boldsymbol{\\alpha},\\qquad \\mathbf{L}=I\\boldsymbol{\\omega}",
+      "meaning": "刚体定轴转动时合外力矩等于转动惯量乘角加速度，与平动 F=ma 对应。",
+      "variables": {
+        "tau": "合外力矩 (N·m)",
+        "I": "转动惯量 (kg·m^2)",
+        "alpha": "角加速度 (rad·s^-2)",
+        "L": "角动量 (kg·m^2·s^-1)",
+        "omega": "角速度 (rad·s^-1)"
+      },
+      "dimension": "M L^2 T^-2",
+      "source": "https://en.wikipedia.org/wiki/Torque",
+      "notes": "核验等级 B（同一 Wikipedia 列表页另有 I·α+ω×(I·ω)=τ 的一般形式，本条目取定轴简化形式）。推导要点：对 L=Σr×p 求导并利用共线条件得 τ=dL/dt=Iα。"
+    },
+    {
+      "id": "em-coulomb",
+      "title": "真空两点电荷间静电力与电量乘积成正比、与距离平方成反比",
+      "domain": "物理/电磁学/静电学",
+      "level": "基础",
+      "latex": "\\mathbf{F}=\\frac{1}{4\\pi\\varepsilon_{0}}\\frac{q_{1}q_{2}}{r^{2}}\\hat{\\mathbf{r}}",
+      "meaning": "真空两点电荷间静电力与电量乘积成正比、与距离平方成反比。",
+      "variables": {
+        "F": "静电力 (N)",
+        "epsilon_0": "真空介电常数 (F·m^-1)",
+        "q_1": "电荷 1 (C)",
+        "q_2": "电荷 2 (C)",
+        "r": "间距 (m)",
+        "r_hat": "单位方向矢量 (无量纲)"
+      },
+      "dimension": "M L T^-2",
+      "source": "https://en.wikipedia.org/wiki/Coulomb%27s_law",
+      "notes": "核验等级 B（页面/主题级，见 md 核验说明）。常量值见 CODATA 2022：真空介电常数 8.8541878188e-12 F m^-1（已在本会话打开的 allascii.txt 中核实）。"
+    },
+    {
+      "id": "em-gauss-law",
+      "title": "通过任意闭合曲面的电通量等于面内净电荷除以真空介电常数",
+      "domain": "物理/电磁学/静电学",
+      "level": "基础",
+      "latex": "\\oint_{S}\\mathbf{E}\\cdot\\mathrm{d}\\mathbf{A}=\\frac{Q_{\\mathrm{enc}}}{\\varepsilon_{0}}",
+      "meaning": "通过任意闭合曲面的电通量等于面内净电荷除以真空介电常数。",
+      "variables": {
+        "E": "电场强度 (V·m^-1)",
+        "A": "面元矢量 (m^2)",
+        "Q_enc": "闭合面内净电荷 (C)",
+        "epsilon_0": "真空介电常数 (F·m^-1)"
+      },
+      "dimension": "M L^3 T^-3 I^-1",
+      "source": "https://en.wikipedia.org/wiki/Gauss%27s_law",
+      "notes": "核验等级 B（页面/主题级，见 md 核验说明）。量纲自检：E·A = (M L T^-3 I^-1)(L^2)；Q/ε0 = (I T)/(M^-1 L^-3 T^4 I^2) 同量纲。"
+    },
+    {
+      "id": "em-lorentz-force",
+      "title": "运动电荷所受电磁力为电场力与洛伦兹磁力的叠加",
+      "domain": "物理/电磁学/电磁力",
+      "level": "基础",
+      "latex": "\\mathbf{F}=q\\left(\\mathbf{E}+\\mathbf{v}\\times\\mathbf{B}\\right)",
+      "meaning": "运动电荷所受电磁力为电场力与洛伦兹磁力的叠加。",
+      "variables": {
+        "F": "电磁力 (N)",
+        "q": "电荷 (C)",
+        "E": "电场强度 (V·m^-1)",
+        "v": "速度 (m·s^-1)",
+        "B": "磁感应强度 (T)"
+      },
+      "dimension": "M L T^-2",
+      "source": "https://en.wikipedia.org/wiki/Lorentz_force",
+      "notes": "核验等级 B（页面/主题级，见 md 核验说明）。量纲自检：q v B = (I T)(L T^-1)(M T^-2 I^-1) = M L T^-2。"
+    },
+    {
+      "id": "em-faraday-law",
+      "title": "感应电动势等于电场的闭合线积分",
+      "domain": "物理/电磁学/电磁感应",
+      "level": "基础",
+      "latex": "\\mathcal{E}=\\oint_{C}\\mathbf{E}\\cdot\\mathrm{d}\\mathbf{l}=-\\frac{\\mathrm{d}\\Phi_{B}}{\\mathrm{d}t}",
+      "meaning": "感应电动势等于电场的闭合线积分，等于穿过回路的磁通量变化率的负值。",
+      "variables": {
+        "E_emf": "感应电动势 (V)",
+        "E": "电场强度 (V·m^-1)",
+        "l": "回路线元 (m)",
+        "Phi_B": "磁通量 (Wb)"
+      },
+      "dimension": "M L^2 T^-3 I^-1",
+      "source": "https://en.wikipedia.org/wiki/Faraday%27s_law_of_induction",
+      "notes": "核验等级 B（页面/主题级，见 md 核验说明）。负号体现楞次定律；E·l 与 dΦ/dt 同为 M L^2 T^-3 I^-1。"
+    },
+    {
+      "id": "em-maxwell-div-e",
+      "title": "电场的高斯定理微分形式：电场散度由局域电荷密度决定",
+      "domain": "物理/电磁学/麦克斯韦方程组",
+      "level": "基础",
+      "latex": "\\nabla\\cdot\\mathbf{E}=\\frac{\\rho}{\\varepsilon_{0}}",
+      "meaning": "电场的高斯定理微分形式：电场散度由局域电荷密度决定。",
+      "variables": {
+        "E": "电场强度 (V·m^-1)",
+        "rho": "电荷体密度 (C·m^-3)",
+        "epsilon_0": "真空介电常数 (F·m^-1)"
+      },
+      "dimension": "M T^-3 I^-1",
+      "source": "https://en.wikipedia.org/wiki/Maxwell%27s_equations",
+      "notes": "核验等级 B（页面/主题级，见 md 核验说明）。∇·E 与 ρ/ε0 同量纲 M T^-3 I^-1（两侧同量纲，故不写“无量纲”）。"
+    },
+    {
+      "id": "em-maxwell-div-b",
+      "title": "磁场无散：不存在磁单极子",
+      "domain": "物理/电磁学/麦克斯韦方程组",
+      "level": "基础",
+      "latex": "\\nabla\\cdot\\mathbf{B}=0",
+      "meaning": "磁场无散：不存在磁单极子，磁感线总是闭合的。",
+      "variables": {
+        "B": "磁感应强度 (T)"
+      },
+      "dimension": "M L^-1 T^-2 I^-1",
+      "source": "https://en.wikipedia.org/wiki/Maxwell%27s_equations",
+      "notes": "核验等级 B（页面/主题级，见 md 核验说明）。∇·B 的量纲 M L^-1 T^-2 I^-1；方程右侧为 0 表示该项恒为零而不是“无量纲”。"
+    },
+    {
+      "id": "em-maxwell-curl-e",
+      "title": "法拉第定律微分形式：变化磁场产生涡旋电场",
+      "domain": "物理/电磁学/麦克斯韦方程组",
+      "level": "基础",
+      "latex": "\\nabla\\times\\mathbf{E}=-\\frac{\\partial\\mathbf{B}}{\\partial t}",
+      "meaning": "法拉第定律微分形式：变化磁场产生涡旋电场。",
+      "variables": {
+        "E": "电场强度 (V·m^-1)",
+        "B": "磁感应强度 (T)",
+        "t": "时间 (s)"
+      },
+      "dimension": "M T^-3 I^-1",
+      "source": "https://en.wikipedia.org/wiki/Maxwell%27s_equations",
+      "notes": "核验等级 B（页面/主题级，见 md 核验说明）。∇×E 与 ∂B/∂t 同量纲 M T^-3 I^-1。"
+    },
+    {
+      "id": "em-maxwell-curl-b",
+      "title": "安培-麦克斯韦定律：传导电流与位移电流共同产生涡旋磁场",
+      "domain": "物理/电磁学/麦克斯韦方程组",
+      "level": "基础",
+      "latex": "\\nabla\\times\\mathbf{B}=\\mu_{0}\\mathbf{J}+\\mu_{0}\\varepsilon_{0}\\frac{\\partial\\mathbf{E}}{\\partial t}",
+      "meaning": "安培-麦克斯韦定律：传导电流与位移电流共同产生涡旋磁场。",
+      "variables": {
+        "B": "磁感应强度 (T)",
+        "mu_0": "真空磁导率 (N·A^-2)",
+        "J": "电流密度 (A·m^-2)",
+        "epsilon_0": "真空介电常数 (F·m^-1)",
+        "E": "电场强度 (V·m^-1)",
+        "t": "时间 (s)"
+      },
+      "dimension": "M L^-1 T^-2 I^-1",
+      "source": "https://en.wikipedia.org/wiki/Maxwell%27s_equations",
+      "notes": "核验等级 B（页面/主题级，见 md 核验说明）。μ0J = (M L T^-2 I^-2)(I L^-2) = M L^-1 T^-2 I^-1，与 ∇×B 同量纲。"
+    },
+    {
+      "id": "em-light-speed",
+      "title": "真空中电磁波速由真空介电常数与磁导率决定",
+      "domain": "物理/电磁学/电磁波",
+      "level": "派生",
+      "latex": "c=\\frac{1}{\\sqrt{\\varepsilon_{0}\\mu_{0}}}",
+      "meaning": "真空中电磁波速由真空介电常数与磁导率决定，其数值即光速。",
+      "variables": {
+        "c": "真空光速 (m·s^-1)",
+        "epsilon_0": "真空介电常数 (F·m^-1)",
+        "mu_0": "真空磁导率 (N·A^-2)"
+      },
+      "dimension": "L T^-1",
+      "source": "https://physics.nist.gov/cuu/Constants/Table/allascii.txt",
+      "notes": "核验等级 A（常量侧）：已核实 c = 299 792 458 m s^-1（精确值）、真空磁导率 1.25663706127e-6 N A^-2、真空介电常数 8.8541878188e-12 F m^-1。推导要点：对真空麦克斯韦方程取旋度得波动方程，波速 1/√(ε0μ0)。"
+    },
+    {
+      "id": "td-ideal-gas",
+      "title": "理想气体的压强、体积、物质的量与温度满足状态方程",
+      "domain": "物理/热力学/气体定律",
+      "level": "基础",
+      "latex": "pV=nRT",
+      "meaning": "理想气体的压强、体积、物质的量与温度满足状态方程。",
+      "variables": {
+        "p": "压强 (Pa)",
+        "V": "体积 (m^3)",
+        "n": "物质的量 (mol)",
+        "R": "摩尔气体常数 (J·mol^-1·K^-1)",
+        "T": "热力学温度 (K)"
+      },
+      "dimension": "M L^2 T^-2",
+      "source": "https://en.wikipedia.org/wiki/Ideal_gas_law",
+      "notes": "核验等级 B（页面/主题级，见 md 核验说明）。常量侧：CODATA 2022 给出 R = 8.314462618 J mol^-1 K^-1（精确，已在 allascii.txt 核实）。pV 为能量量纲 M L^2 T^-2。"
+    },
+    {
+      "id": "td-first-law",
+      "title": "系统内能增量等于吸收的热量减去系统对外做的功（本库采用“系统对外做功为正”的符号",
+      "domain": "物理/热力学/热力学第一定律",
+      "level": "基础",
+      "latex": "\\Delta U=Q-W",
+      "meaning": "系统内能增量等于吸收的热量减去系统对外做的功（本库采用“系统对外做功为正”的符号约定）。",
+      "variables": {
+        "Delta_U": "内能增量 (J)",
+        "Q": "吸收的热量 (J)",
+        "W": "系统对外做的功 (J)"
+      },
+      "dimension": "M L^2 T^-2",
+      "source": "https://en.wikipedia.org/wiki/First_law_of_thermodynamics",
+      "notes": "核验等级 B（页面/主题级，见 md 核验说明）。⚠️符号约定不一致是本条最大风险：IUPAC 与物理化学教材常用 ΔU=Q+W（外界对系统做功为正），中国工科/物理教材常用 ΔU=Q−W。插件必须在条目上显式标注约定，或同时提供两种写法。"
+    },
+    {
+      "id": "td-entropy",
+      "title": "沿可逆路径的热温商积分给出熵变",
+      "domain": "物理/热力学/熵与第二定律",
+      "level": "基础",
+      "latex": "\\Delta S=\\int_{A}^{B}\\frac{\\delta Q_{\\mathrm{rev}}}{T}",
+      "meaning": "沿可逆路径的热温商积分给出熵变，是熵的宏观（克劳修斯）定义。",
+      "variables": {
+        "Delta_S": "熵变 (J·K^-1)",
+        "Q_rev": "可逆过程吸收的微小热量 (J)",
+        "T": "热力学温度 (K)"
+      },
+      "dimension": "M L^2 T^-2 Θ^-1",
+      "source": "https://en.wikipedia.org/wiki/Entropy",
+      "notes": "核验等级 B（页面/主题级，见 md 核验说明）。熵变值与路径无关（态函数），故可用任意可逆路径计算。"
+    },
+    {
+      "id": "td-boltzmann-entropy",
+      "title": "熵等于玻尔兹曼常数乘微观状态数（或相空间体积）的自然对数",
+      "domain": "物理/统计物理/熵的统计解释",
+      "level": "基础",
+      "latex": "S=k_{\\mathrm{B}}\\ln\\Omega",
+      "meaning": "熵等于玻尔兹曼常数乘微观状态数（或相空间体积）的自然对数，是统计物理的桥接公式。",
+      "variables": {
+        "S": "熵 (J·K^-1)",
+        "k_B": "玻尔兹曼常数 (J·K^-1)",
+        "Omega": "热力学概率/微观状态数 (无量纲)"
+      },
+      "dimension": "M L^2 T^-2 Θ^-1",
+      "source": "https://en.wikipedia.org/wiki/Boltzmann%27s_entropy_formula",
+      "notes": "核验等级 B（页面/主题级，见 md 核验说明）。常量侧：CODATA 2022 给出 k = 1.380649e-23 J K^-1（精确）。"
+    },
+    {
+      "id": "td-carnot",
+      "title": "可逆卡诺热机的效率只由高、低温热源温度决定",
+      "domain": "物理/热力学/热机与第二定律",
+      "level": "派生",
+      "latex": "\\eta=1-\\frac{T_{\\mathrm{c}}}{T_{\\mathrm{h}}}",
+      "meaning": "可逆卡诺热机的效率只由高、低温热源温度决定，是任意热机效率的上限。",
+      "variables": {
+        "eta": "热机效率 (无量纲)",
+        "T_c": "低温热源温度 (K)",
+        "T_h": "高温热源温度 (K)"
+      },
+      "dimension": "无量纲",
+      "source": "https://en.wikipedia.org/wiki/Carnot_heat_engine",
+      "notes": "核验等级 B（页面/主题级，见 md 核验说明）。仅由第一定律不足，需用到第二定律（卡诺定理）；温度必须用热力学温标 K。"
+    },
+    {
+      "id": "td-stefan-boltzmann",
+      "title": "黑体单位面积辐射总功率随绝对温度的四次方增长",
+      "domain": "物理/热力学/热辐射",
+      "level": "派生",
+      "latex": "j^{\\star}=\\sigma T^{4}",
+      "meaning": "黑体单位面积辐射总功率随绝对温度的四次方增长。",
+      "variables": {
+        "j": "辐射出射度 (W·m^-2)",
+        "sigma": "斯特藩-玻尔兹曼常数 (W·m^-2·K^-4)",
+        "T": "热力学温度 (K)"
+      },
+      "dimension": "M T^-3",
+      "source": "https://physics.nist.gov/cuu/Constants/Table/allascii.txt",
+      "notes": "核验等级 A（常量侧）：已核实 σ = 5.670374419e-8 W m^-2 K^-4（精确值）。公式经 web_search 在 Wikipedia 页面确认（等级 B）。由普朗克定律对频率积分导出（理论上属派生），故 level=派生。"
+    },
+    {
+      "id": "qm-planck-e",
+      "title": "光子的能量正比于其频率",
+      "domain": "物理/量子力学/量子假设",
+      "level": "基础",
+      "latex": "E=h\\nu=\\hbar\\omega",
+      "meaning": "光子的能量正比于其频率，比例系数为普朗克常数。",
+      "variables": {
+        "E": "光子能量 (J)",
+        "h": "普朗克常数 (J·s)",
+        "nu": "频率 (Hz)",
+        "hbar": "约化普朗克常数 (J·s)",
+        "omega": "角频率 (rad·s^-1)"
+      },
+      "dimension": "M L^2 T^-2",
+      "source": "https://en.wikipedia.org/wiki/Planck_relation",
+      "notes": "核验等级 B（页面/主题级，见 md 核验说明）。常量侧：CODATA 2022 给出 h = 6.62607015e-34 J Hz^-1（精确）、ħ = 1.054571817...e-34 J s。"
+    },
+    {
+      "id": "qm-de-broglie",
+      "title": "物质波波长等于普朗克常数除以动量（德布罗意关系）",
+      "domain": "物理/量子力学/波粒二象性",
+      "level": "基础",
+      "latex": "\\lambda=\\frac{h}{p}",
+      "meaning": "物质波波长等于普朗克常数除以动量（德布罗意关系）。",
+      "variables": {
+        "lambda": "德布罗意波长 (m)",
+        "h": "普朗克常数 (J·s)",
+        "p": "动量 (kg·m·s^-1)"
+      },
+      "dimension": "L",
+      "source": "https://en.wikipedia.org/wiki/Matter_wave",
+      "notes": "核验等级 B（页面/主题级，见 md 核验说明）。量纲自检：(J·s)/(kg·m/s) = (kg m^2 s^-1)/(kg m s^-1) = m。相对论情形 p=γmv。"
+    },
+    {
+      "id": "qm-schrodinger",
+      "title": "波函数随时间的演化由哈密顿算符作用决定",
+      "domain": "物理/量子力学/波动力学",
+      "level": "基础",
+      "latex": "i\\hbar\\frac{\\partial\\Psi(\\mathbf{r},t)}{\\partial t}=\\left[-\\frac{\\hbar^{2}}{2m}\\nabla^{2}+V(\\mathbf{r},t)\\right]\\Psi(\\mathbf{r},t)",
+      "meaning": "波函数随时间的演化由哈密顿算符作用决定，是非相对论量子力学的基本运动方程。",
+      "variables": {
+        "Psi": "波函数 (m^-3/2)",
+        "hbar": "约化普朗克常数 (J·s)",
+        "m": "粒子质量 (kg)",
+        "V": "势能 (J)",
+        "r": "位置 (m)",
+        "t": "时间 (s)"
+      },
+      "dimension": "M L^2 T^-2",
+      "source": "https://en.wikipedia.org/wiki/Schr%C3%B6dinger_equation",
+      "notes": "核验等级 B：web_search 返回该页含 iℏ∂Ψ/∂t = −(ℏ²/2m)∇²Ψ + VΨ 的正文片段。dimension 记的是两侧能量量纲（严格说两侧为“能量×波函数”）。"
+    },
+    {
+      "id": "qm-uncertainty",
+      "title": "位置与动量的不确定度乘积有下界",
+      "domain": "物理/量子力学/不确定关系",
+      "level": "基础",
+      "latex": "\\Delta x\\,\\Delta p\\geq\\frac{\\hbar}{2}",
+      "meaning": "位置与动量的不确定度乘积有下界，是量子测量与共轭量的内在限制。",
+      "variables": {
+        "Delta_x": "位置标准不确定度 (m)",
+        "Delta_p": "动量标准不确定度 (kg·m·s^-1)",
+        "hbar": "约化普朗克常数 (J·s)"
+      },
+      "dimension": "M L^2 T^-1",
+      "source": "https://en.wikipedia.org/wiki/Uncertainty_principle",
+      "notes": "核验等级 B（页面/主题级，见 md 核验说明）。量纲自检：m·kg·m/s = kg m^2 s^-1 = J·s。"
+    },
+    {
+      "id": "qm-hydrogen-energy",
+      "title": "氢原子束缚态能级按 1/n² 衰减",
+      "domain": "物理/量子力学/原子结构",
+      "level": "派生",
+      "latex": "E_{n}=-\\frac{m_{e}e^{4}}{8\\varepsilon_{0}^{2}h^{2}}\\,\\frac{1}{n^{2}}",
+      "meaning": "氢原子束缚态能级按 1/n² 衰减，n 为主量子数。",
+      "variables": {
+        "E_n": "第 n 能级能量 (J)",
+        "m_e": "电子质量 (kg)",
+        "e": "基本电荷 (C)",
+        "epsilon_0": "真空介电常数 (F·m^-1)",
+        "h": "普朗克常数 (J·s)",
+        "n": "主量子数 (无量纲, n=1,2,...)"
+      },
+      "dimension": "M L^2 T^-2",
+      "source": "https://physics.nist.gov/cuu/Constants/Table/allascii.txt",
+      "notes": "核验等级 A（常量侧）：CODATA 给出 Rydberg constant times hc in eV = 13.605693122990 eV，故 E_1 = −13.6057 eV（与公式数值一致，可作数值自检）。公式形式经 web_search 在 Wikipedia 氢原子页确认（等级 B）。推导要点：库仑势下求解定态薛定谔方程。"
+    },
+    {
+      "id": "qm-harmonic-oscillator",
+      "title": "量子谐振子能级等间距",
+      "domain": "物理/量子力学/量子谐振子",
+      "level": "派生",
+      "latex": "E_{n}=\\left(n+\\tfrac{1}{2}\\right)\\hbar\\omega,\\qquad n=0,1,2,\\dots",
+      "meaning": "量子谐振子能级等间距，且零点能为 ħω/2，是场量子化与分子振动的基础。",
+      "variables": {
+        "E_n": "能级能量 (J)",
+        "n": "量子数 (无量纲)",
+        "hbar": "约化普朗克常数 (J·s)",
+        "omega": "角频率 (rad·s^-1)"
+      },
+      "dimension": "M L^2 T^-2",
+      "source": "https://en.wikipedia.org/wiki/Quantum_harmonic_oscillator",
+      "notes": "核验等级 B（页面/主题级，见 md 核验说明）。推导要点：抛物势下用升降算符或级数法求解定态薛定谔方程。"
+    },
+    {
+      "id": "rel-lorentz-factor",
+      "title": "洛伦兹因子描述相对速度导致的时空量度变化",
+      "domain": "物理/狭义相对论/洛伦兹变换",
+      "level": "基础",
+      "latex": "\\gamma=\\frac{1}{\\sqrt{1-\\dfrac{v^{2}}{c^{2}}}}",
+      "meaning": "洛伦兹因子描述相对速度导致的时空量度变化，v→c 时发散。",
+      "variables": {
+        "gamma": "洛伦兹因子 (无量纲)",
+        "v": "相对速度 (m·s^-1)",
+        "c": "真空光速 (m·s^-1)"
+      },
+      "dimension": "无量纲",
+      "source": "https://en.wikipedia.org/wiki/Lorentz_factor",
+      "notes": "核验等级 B（页面/主题级，见 md 核验说明）。要求 v<c；γ 为无量纲量。"
+    },
+    {
+      "id": "rel-time-dilation",
+      "title": "在另一惯性系测得的时间间隔等于固有时乘以洛伦兹因子",
+      "domain": "物理/狭义相对论/时间膨胀",
+      "level": "派生",
+      "latex": "\\Delta t=\\gamma\\,\\Delta\\tau",
+      "meaning": "在另一惯性系测得的时间间隔等于固有时乘以洛伦兹因子，即“运动的钟走得慢”。",
+      "variables": {
+        "Delta_t": "观测系时间间隔 (s)",
+        "Delta_tau": "固有时间间隔 (s)",
+        "gamma": "洛伦兹因子 (无量纲)"
+      },
+      "dimension": "T",
+      "source": "https://en.wikipedia.org/wiki/Time_dilation",
+      "notes": "核验等级 B（页面/主题级，见 md 核验说明）。推导要点：由洛伦兹变换 Δt = γ(Δτ + vΔx'/c²)，在固有时系 Δx'=0 得结果。"
+    },
+    {
+      "id": "rel-mass-energy",
+      "title": "静止质量与能量等价",
+      "domain": "物理/狭义相对论/质能关系",
+      "level": "基础",
+      "latex": "E=mc^{2}",
+      "meaning": "静止质量与能量等价，质量是能量的一种形式（静能）。",
+      "variables": {
+        "E": "静能 (J)",
+        "m": "静止质量 (kg)",
+        "c": "真空光速 (m·s^-1)"
+      },
+      "dimension": "M L^2 T^-2",
+      "source": "https://physics.nist.gov/cuu/Constants/Table/allascii.txt",
+      "notes": "核验等级 A（常量侧，c 精确定义值 299792458 m/s）+ B（公式表述经 web_search 在 Wikipedia 质能等价页确认）。量纲自检：kg·(m/s)² = J。"
+    },
+    {
+      "id": "rel-energy-momentum",
+      "title": "相对论能量-动量关系",
+      "domain": "物理/狭义相对论/相对论动力学",
+      "level": "派生",
+      "latex": "E^{2}=p^{2}c^{2}+m^{2}c^{4}",
+      "meaning": "相对论能量-动量关系，同时涵盖有质量粒子与光子（m=0 时 E=pc）。",
+      "variables": {
+        "E": "总能量 (J)",
+        "p": "动量 (kg·m·s^-1)",
+        "m": "静止质量 (kg)",
+        "c": "真空光速 (m·s^-1)"
+      },
+      "dimension": "M^2 L^4 T^-4",
+      "source": "https://en.wikipedia.org/wiki/Energy%E2%80%93momentum_relation",
+      "notes": "核验等级 B（页面/主题级，见 md 核验说明）。dimension 记的是两侧平方量纲 M²L⁴T⁻⁴（开方后为能量）。"
+    },
+    {
+      "id": "rel-momentum",
+      "title": "相对论动量在低速时退化为 mv",
+      "domain": "物理/狭义相对论/相对论动力学",
+      "level": "派生",
+      "latex": "\\mathbf{p}=\\gamma m\\mathbf{v}",
+      "meaning": "相对论动量在低速时退化为 mv，高速时随 γ 增长而趋于无穷。",
+      "variables": {
+        "p": "相对论动量 (kg·m·s^-1)",
+        "gamma": "洛伦兹因子 (无量纲)",
+        "m": "静止质量 (kg)",
+        "v": "速度 (m·s^-1)"
+      },
+      "dimension": "M L T^-1",
+      "source": "https://en.wikipedia.org/wiki/Special_relativity",
+      "notes": "核验等级 B（页面/主题级，见 md 核验说明）。"
+    },
+    {
+      "id": "wo-wave-equation",
+      "title": "经典波动方程：介质位移的二阶时间导数正比于其二阶空间导数",
+      "domain": "物理/波动/波动方程",
+      "level": "基础",
+      "latex": "\\frac{\\partial^{2}u}{\\partial t^{2}}=v^{2}\\nabla^{2}u",
+      "meaning": "经典波动方程：介质位移的二阶时间导数正比于其二阶空间导数，比例系数为波速平方。",
+      "variables": {
+        "u": "波函数/位移 (按物理量而定)",
+        "v": "波速 (m·s^-1)",
+        "t": "时间 (s)",
+        "nabla2": "拉普拉斯算符 (m^-2)"
+      },
+      "dimension": "（u 的量纲）T^-2",
+      "source": "https://mathworld.wolfram.com/WaveEquation.html",
+      "notes": "核验等级 A：本会话直接打开该页（HTTP 200），页面给出三维波动方程、拉普拉斯与达朗贝尔算符表述；公式以图片渲染，文本按标准形式录入。"
+    },
+    {
+      "id": "wo-v-lambda-f",
+      "title": "波速等于频率乘波长",
+      "domain": "物理/波动/波的传播",
+      "level": "基础",
+      "latex": "v=f\\lambda",
+      "meaning": "波速等于频率乘波长。",
+      "variables": {
+        "v": "波速 (m·s^-1)",
+        "f": "频率 (Hz)",
+        "lambda": "波长 (m)"
+      },
+      "dimension": "L T^-1",
+      "source": "https://en.wikipedia.org/wiki/Wavelength",
+      "notes": "核验等级 B（页面/主题级，见 md 核验说明）。量纲自检：Hz·m = s^-1·m。"
+    },
+    {
+      "id": "wo-snell",
+      "title": "折射定律（斯涅尔定律）：入射角与折射角的正弦之比等于两介质折射率之反比",
+      "domain": "物理/光学/几何光学",
+      "level": "基础",
+      "latex": "n_{1}\\sin\\theta_{1}=n_{2}\\sin\\theta_{2}",
+      "meaning": "折射定律（斯涅尔定律）：入射角与折射角的正弦之比等于两介质折射率之反比。",
+      "variables": {
+        "n_1": "介质 1 折射率 (无量纲)",
+        "theta_1": "入射角 (rad)",
+        "n_2": "介质 2 折射率 (无量纲)",
+        "theta_2": "折射角 (rad)"
+      },
+      "dimension": "无量纲",
+      "source": "https://en.wikipedia.org/wiki/Snell%27s_law",
+      "notes": "核验等级 B（页面/主题级，见 md 核验说明）。角度从法线量起；全反射临界角 sinθ_c = n2/n1（n1>n2）。"
+    },
+    {
+      "id": "wo-grating",
+      "title": "光栅主极大条件：相邻缝光程差为波长整数倍时相干增强",
+      "domain": "物理/光学/波动光学",
+      "level": "基础",
+      "latex": "d\\sin\\theta_{m}=m\\lambda",
+      "meaning": "光栅主极大条件：相邻缝光程差为波长整数倍时相干增强。",
+      "variables": {
+        "d": "光栅常数/缝间距 (m)",
+        "theta_m": "第 m 级衍射角 (rad)",
+        "m": "衍射级次 (整数, 无量纲)",
+        "lambda": "波长 (m)"
+      },
+      "dimension": "L",
+      "source": "https://en.wikipedia.org/wiki/Diffraction_grating",
+      "notes": "核验等级 B（页面/主题级，见 md 核验说明）。正入射情形；斜入射需改为 d(sinθ_m ± sinθ_i)=mλ。"
+    },
+    {
+      "id": "fl-continuity",
+      "title": "质量守恒的连续方程：局域密度变化率等于净质量通量的负散度",
+      "domain": "物理/流体力学/连续性",
+      "level": "基础",
+      "latex": "\\frac{\\partial\\rho}{\\partial t}+\\nabla\\cdot(\\rho\\mathbf{u})=0",
+      "meaning": "质量守恒的连续方程：局域密度变化率等于净质量通量的负散度。",
+      "variables": {
+        "rho": "密度 (kg·m^-3)",
+        "u": "流速 (m·s^-1)",
+        "t": "时间 (s)"
+      },
+      "dimension": "M L^-3 T^-1",
+      "source": "https://en.wikipedia.org/wiki/Continuity_equation",
+      "notes": "核验等级 B（页面/主题级，见 md 核验说明）。不可压缩（ρ 常数）时退化为 ∇·u=0。"
+    },
+    {
+      "id": "fl-bernoulli",
+      "title": "沿同一流线",
+      "domain": "物理/流体力学/理想流体",
+      "level": "基础",
+      "latex": "p+\\tfrac{1}{2}\\rho v^{2}+\\rho g z=\\text{const}",
+      "meaning": "沿同一流线，压强能、动能与重力势能密度之和守恒（定常、无黏、不可压缩）。",
+      "variables": {
+        "p": "压强 (Pa)",
+        "rho": "密度 (kg·m^-3)",
+        "v": "流速 (m·s^-1)",
+        "g": "重力加速度 (m·s^-2)",
+        "z": "高度 (m)"
+      },
+      "dimension": "M L^-1 T^-2",
+      "source": "https://en.wikipedia.org/wiki/Bernoulli%27s_principle",
+      "notes": "核验等级 B（页面/主题级，见 md 核验说明）。⚠️适用条件（定常、无黏、不可压缩、同一流线）必须写进释义，否则易被误用。"
+    },
+    {
+      "id": "fl-poiseuille",
+      "title": "圆管层流的体积流量与压降和半径四次方成正比、与黏度和管长成反比",
+      "domain": "物理/流体力学/黏性流动",
+      "level": "派生",
+      "latex": "Q=\\frac{\\pi\\,\\Delta p\\,r^{4}}{8\\eta L}",
+      "meaning": "圆管层流的体积流量与压降和半径四次方成正比、与黏度和管长成反比。",
+      "variables": {
+        "Q": "体积流量 (m^3·s^-1)",
+        "Delta_p": "两端压降 (Pa)",
+        "r": "管半径 (m)",
+        "eta": "动力黏度 (Pa·s)",
+        "L": "管长 (m)"
+      },
+      "dimension": "L^3 T^-1",
+      "source": "https://en.wikipedia.org/wiki/Hagen%E2%80%93Poiseuille_equation",
+      "notes": "核验等级 B（页面/主题级，见 md 核验说明）。仅在层流（Re 较小）、不可压缩、充分发展的圆管流下成立。"
+    },
+    {
+      "id": "fl-reynolds",
+      "title": "雷诺数衡量惯性力与黏性力之比",
+      "domain": "物理/流体力学/相似与湍流",
+      "level": "基础",
+      "latex": "\\mathrm{Re}=\\frac{\\rho v L}{\\eta}=\\frac{vL}{\\nu}",
+      "meaning": "雷诺数衡量惯性力与黏性力之比，是判断层流/湍流转捩的无量纲判据。",
+      "variables": {
+        "Re": "雷诺数 (无量纲)",
+        "rho": "密度 (kg·m^-3)",
+        "v": "特征速度 (m·s^-1)",
+        "L": "特征长度 (m)",
+        "eta": "动力黏度 (Pa·s)",
+        "nu": "运动黏度 (m^2·s^-1)"
+      },
+      "dimension": "无量纲",
+      "source": "https://en.wikipedia.org/wiki/Reynolds_number",
+      "notes": "核验等级 B（页面/主题级，见 md 核验说明）。量纲自检：(kg m^-3)(m s^-1)(m)/(Pa s) = 1。圆管临界 Re 约 2000–4000（教材口径，具体阈值未核验）。"
+    },
+    {
+      "id": "fl-navier-stokes",
+      "title": "不可压缩牛顿流体的动量方程：惯性项等于压力梯度、黏性扩散与外体力之和",
+      "domain": "物理/流体力学/黏性流体动力学",
+      "level": "派生",
+      "latex": "\\rho\\left(\\frac{\\partial\\mathbf{u}}{\\partial t}+(\\mathbf{u}\\cdot\\nabla)\\mathbf{u}\\right)=-\\nabla p+\\mu\\nabla^{2}\\mathbf{u}+\\mathbf{f}",
+      "meaning": "不可压缩牛顿流体的动量方程：惯性项等于压力梯度、黏性扩散与外体力之和。",
+      "variables": {
+        "rho": "密度 (kg·m^-3)",
+        "u": "流速场 (m·s^-1)",
+        "p": "压强 (Pa)",
+        "mu": "动力黏度 (Pa·s)",
+        "f": "单位体积外力 (N·m^-3)"
+      },
+      "dimension": "M L^-2 T^-2",
+      "source": "https://en.wikipedia.org/wiki/Navier%E2%80%93Stokes_equations",
+      "notes": "核验等级 B（web_search 返回该页含 ρDu/Dt=−∇p̄+μ∇²u+… 的片段）。此处给不可压缩、常黏度形式；压缩流需加 (1/3)μ∇(∇·u)。dimension 为动量方程各项（力密度）M L^-2 T^-2。属高阶公式，建议 UI 归入“高级”。"
+    },
+    {
+      "id": "ma-quadratic",
+      "title": "一元二次方程的求根公式",
+      "domain": "数学/代数/方程",
+      "level": "基础",
+      "latex": "x=\\frac{-b\\pm\\sqrt{b^{2}-4ac}}{2a},\\qquad a\\neq 0",
+      "meaning": "一元二次方程的求根公式，判别式 b²−4ac 决定实根个数。",
+      "variables": {
+        "x": "未知数 (无量纲)",
+        "a": "二次项系数 (无量纲)",
+        "b": "一次项系数 (无量纲)",
+        "c": "常数项 (无量纲)"
+      },
+      "dimension": "无量纲",
+      "source": "https://mathworld.wolfram.com/QuadraticEquation.html",
+      "notes": "核验等级 A：本会话直接打开该页（HTTP 200），页面明确给出“quadratic formula”及韦达定理；公式以图片渲染，文本按标准形式录入。数值稳定性：b²≫4ac 时建议用有理化形式避免相消误差。"
+    },
+    {
+      "id": "ma-derivative",
+      "title": "导数是一阶差商的极限",
+      "domain": "数学/数学分析/导数与微分",
+      "level": "基础",
+      "latex": "f'(x)=\\frac{\\mathrm{d}f}{\\mathrm{d}x}=\\lim_{h\\to 0}\\frac{f(x+h)-f(x)}{h}",
+      "meaning": "导数是一阶差商的极限，即函数在该点的瞬时变化率。",
+      "variables": {
+        "f": "一元函数 (无量纲)",
+        "x": "自变量 (无量纲)",
+        "h": "增量 (无量纲)"
+      },
+      "dimension": "无量纲",
+      "source": "https://dlmf.nist.gov/1.4",
+      "notes": "核验等级 A：本会话打开 DLMF §1.4（HTTP 200），公式编号 1.4.4 即此式（文本抽取后上标有错位，按标准形式录入）。"
+    },
+    {
+      "id": "ma-chain-rule",
+      "title": "复合函数求导的链式法则：外层导数乘内层导数",
+      "domain": "数学/数学分析/求导法则",
+      "level": "基础",
+      "latex": "h'(x)=f'(g(x))\\,g'(x),\\qquad h(x)=f(g(x))",
+      "meaning": "复合函数求导的链式法则：外层导数乘内层导数。",
+      "variables": {
+        "f": "外层函数 (无量纲)",
+        "g": "内层函数 (无量纲)",
+        "x": "自变量 (无量纲)"
+      },
+      "dimension": "无量纲",
+      "source": "https://dlmf.nist.gov/1.4",
+      "notes": "核验等级 A：DLMF 公式 1.4.10（本会话已打开该页）。"
+    },
+    {
+      "id": "ma-ftc",
+      "title": "微积分基本定理：定积分等于原函数在两端点的值之差",
+      "domain": "数学/数学分析/积分",
+      "level": "基础",
+      "latex": "\\int_{a}^{b}f(x)\\,\\mathrm{d}x=F(b)-F(a),\\qquad F'(x)=f(x)",
+      "meaning": "微积分基本定理：定积分等于原函数在两端点的值之差。",
+      "variables": {
+        "f": "被积函数 (无量纲)",
+        "F": "原函数 (无量纲)",
+        "a": "下限 (无量纲)",
+        "b": "上限 (无量纲)"
+      },
+      "dimension": "无量纲",
+      "source": "https://dlmf.nist.gov/1.4",
+      "notes": "核验等级 A：DLMF 公式 1.4.26 / 1.4.27（本会话已打开该页）。要求 f 连续。"
+    },
+    {
+      "id": "ma-integration-by-parts",
+      "title": "分部积分公式",
+      "domain": "数学/数学分析/积分",
+      "level": "派生",
+      "latex": "\\int f g\\,\\mathrm{d}x=\\left(\\int f\\,\\mathrm{d}x\\right)g-\\int\\left(\\int f\\,\\mathrm{d}x\\right)\\frac{\\mathrm{d}g}{\\mathrm{d}x}\\,\\mathrm{d}x",
+      "meaning": "分部积分公式，由乘积求导法则移项积分得到。",
+      "variables": {
+        "f": "被积函数之一 (无量纲)",
+        "g": "被积函数之一 (无量纲)",
+        "x": "积分变量 (无量纲)"
+      },
+      "dimension": "无量纲",
+      "source": "https://dlmf.nist.gov/1.4",
+      "notes": "核验等级 A：DLMF 公式 1.4.16。常用记忆形式 ∫u dv = uv − ∫v du（需令 u 为原函数形式）。"
+    },
+    {
+      "id": "ma-taylor",
+      "title": "泰勒定理：函数可展开为幂级数加余项",
+      "domain": "数学/数学分析/级数展开",
+      "level": "派生",
+      "latex": "f(x)=\\sum_{k=0}^{n}\\frac{f^{(k)}(a)}{k!}(x-a)^{k}+R_{n},\\qquad R_{n}=\\frac{1}{n!}\\int_{a}^{x}(x-t)^{n}f^{(n+1)}(t)\\,\\mathrm{d}t",
+      "meaning": "泰勒定理：函数可展开为幂级数加余项，余项给出截断误差。",
+      "variables": {
+        "f": "充分光滑函数 (无量纲)",
+        "a": "展开点 (无量纲)",
+        "x": "自变量 (无量纲)",
+        "R_n": "余项 (无量纲)",
+        "n": "展开阶数 (无量纲)"
+      },
+      "dimension": "无量纲",
+      "source": "https://dlmf.nist.gov/1.4",
+      "notes": "核验等级 A：DLMF 公式 1.4.35–1.4.37（含拉格朗日型与积分型余项）。"
+    },
+    {
+      "id": "la-matmul",
+      "title": "矩阵乘法的“行乘列”规则",
+      "domain": "数学/线性代数/矩阵运算",
+      "level": "基础",
+      "latex": "c_{ij}=\\sum_{k=1}^{n}a_{ik}b_{kj}",
+      "meaning": "矩阵乘法的“行乘列”规则，要求左矩阵列数等于右矩阵行数。",
+      "variables": {
+        "a_ik": "矩阵 A 元素 (无量纲)",
+        "b_kj": "矩阵 B 元素 (无量纲)",
+        "c_ij": "矩阵 C=AB 元素 (无量纲)"
+      },
+      "dimension": "无量纲",
+      "source": "https://dlmf.nist.gov/1.2",
+      "notes": "核验等级 A：本会话打开 DLMF §1.2（HTTP 200），矩阵乘法为 1.2.34，并给出结合律 1.2.35、转置 1.2.37。一般情形量纲为矩阵元量纲之积。"
+    },
+    {
+      "id": "la-determinant",
+      "title": "行列式的莱布尼茨展开：对全部置换求和",
+      "domain": "数学/线性代数/行列式",
+      "level": "基础",
+      "latex": "\\det(\\mathbf{A})=\\sum_{\\sigma\\in S_{n}}\\operatorname{sgn}(\\sigma)\\prod_{i=1}^{n}a_{i,\\sigma(i)}",
+      "meaning": "行列式的莱布尼茨展开：对全部置换求和，符号为置换的奇偶性。",
+      "variables": {
+        "A": "n 阶方阵 (无量纲)",
+        "sigma": "n 元置换 (无量纲)",
+        "sgn": "置换符号 ±1 (无量纲)"
+      },
+      "dimension": "无量纲",
+      "source": "https://dlmf.nist.gov/1.2",
+      "notes": "核验等级 A：DLMF 公式 1.2.58–1.2.59。数值实现应避免直接按定义展开（O(n!)），改用 LU 分解。"
+    },
+    {
+      "id": "la-eigen",
+      "title": "特征值方程：线性变换作用于特征向量只改变其长度（标量倍）",
+      "domain": "数学/线性代数/特征值问题",
+      "level": "基础",
+      "latex": "\\mathbf{A}\\mathbf{a}=\\lambda\\mathbf{a},\\qquad \\mathbf{a}\\neq\\mathbf{0}",
+      "meaning": "特征值方程：线性变换作用于特征向量只改变其长度（标量倍）。",
+      "variables": {
+        "A": "方阵 (无量纲)",
+        "a": "特征向量 (无量纲)",
+        "lambda": "特征值 (无量纲)"
+      },
+      "dimension": "无量纲",
+      "source": "https://dlmf.nist.gov/1.2",
+      "notes": "核验等级 A：DLMF 公式 1.2.70–1.2.72（含特征多项式与线性方程组）。"
+    },
+    {
+      "id": "la-det-eigen",
+      "title": "行列式等于全部特征值之积",
+      "domain": "数学/线性代数/特征值问题",
+      "level": "派生",
+      "latex": "\\det(\\mathbf{A})=\\prod_{i=1}^{n}\\lambda_{i},\\qquad \\operatorname{tr}(\\mathbf{A})=\\sum_{i=1}^{n}\\lambda_{i}",
+      "meaning": "行列式等于全部特征值之积，迹等于全部特征值之和（含重数）。",
+      "variables": {
+        "A": "可对角化方阵 (无量纲)",
+        "lambda_i": "第 i 个特征值 (无量纲)"
+      },
+      "dimension": "无量纲",
+      "source": "https://dlmf.nist.gov/1.2",
+      "notes": "核验等级 A：DLMF 公式 1.2.74 与 1.2.75（原式在非亏损矩阵下导出，1.2.77 的注记说明更一般成立）。可用作数值实现的强校验：det 与 tr 的两个恒等式。"
+    },
+    {
+      "id": "la-cauchy-schwarz",
+      "title": "柯西-施瓦茨不等式：内积的绝对值不超过两向量范数之积",
+      "domain": "数学/线性代数/内积与范数",
+      "level": "基础",
+      "latex": "\\left|\\langle\\mathbf{u},\\mathbf{v}\\rangle\\right|\\leq\\|\\mathbf{u}\\|\\,\\|\\mathbf{v}\\|",
+      "meaning": "柯西-施瓦茨不等式：内积的绝对值不超过两向量范数之积，等号当且仅当两向量共线。",
+      "variables": {
+        "u": "向量 (无量纲)",
+        "v": "向量 (无量纲)",
+        "inner": "内积 (无量纲)",
+        "norm": "l2 范数 (无量纲)"
+      },
+      "dimension": "无量纲",
+      "source": "https://dlmf.nist.gov/1.2",
+      "notes": "核验等级 A：DLMF 公式 1.2.50–1.2.51（Hölder 不等式在 p=q=2 的特例），另给出 l2 范数 1.2.46 与三角不等式 1.2.52。"
+    },
+    {
+      "id": "ps-normal-pdf",
+      "title": "正态分布的概率密度函数",
+      "domain": "数学/概率统计/连续分布",
+      "level": "基础",
+      "latex": "f(x)=\\frac{1}{\\sigma\\sqrt{2\\pi}}\\exp\\left[-\\frac{(x-\\mu)^{2}}{2\\sigma^{2}}\\right]",
+      "meaning": "正态分布的概率密度函数，由均值 μ 与标准差 σ 完全确定。",
+      "variables": {
+        "f": "概率密度 (m^-1，若 x 为长度)",
+        "x": "随机变量取值 (m)",
+        "mu": "均值 (m)",
+        "sigma": "标准差 (m)"
+      },
+      "dimension": "L^-1（当 x 具长度量纲时；一般取随机变量量纲的倒数）",
+      "source": "https://mathworld.wolfram.com/NormalDistribution.html",
+      "notes": "核验等级 A：本会话直接打开该页（HTTP 200），页面给出 pdf、标准化变换、erf 表述、矩与中心极限定理；公式以图片渲染，文本按标准形式录入。"
+    },
+    {
+      "id": "ps-mean",
+      "title": "算术平均：n 个观测值之和除以 n",
+      "domain": "数学/概率统计/描述统计",
+      "level": "基础",
+      "latex": "\\bar{x}=\\frac{1}{n}\\sum_{i=1}^{n}x_{i}",
+      "meaning": "算术平均：n 个观测值之和除以 n。",
+      "variables": {
+        "x_bar": "样本均值 (同 x 的单位)",
+        "x_i": "第 i 个观测值 (无量纲)",
+        "n": "样本量 (无量纲)"
+      },
+      "dimension": "无量纲",
+      "source": "https://dlmf.nist.gov/1.2",
+      "notes": "核验等级 A：DLMF 公式 1.2.17 给出算术平均（同节 1.2.18–1.2.26 给出几何平均、调和平均、加权幂平均）。量纲随 x_i 而定。"
+    },
+    {
+      "id": "ps-variance",
+      "title": "方差度量随机变量围绕均值的离散程度",
+      "domain": "数学/概率统计/描述统计",
+      "level": "基础",
+      "latex": "\\operatorname{Var}(X)=\\mathrm{E}\\left[(X-\\mu)^{2}\\right]=\\mathrm{E}[X^{2}]-\\mu^{2}",
+      "meaning": "方差度量随机变量围绕均值的离散程度，等于二阶中心矩。",
+      "variables": {
+        "Var": "方差 (X 的量纲平方)",
+        "X": "随机变量 (无量纲)",
+        "mu": "期望 (无量纲)",
+        "E": "数学期望 (无量纲)"
+      },
+      "dimension": "无量纲",
+      "source": "https://mathworld.wolfram.com/NormalDistribution.html",
+      "notes": "核验等级 A（页面侧）：MathWorld 正态分布页给出方差、偏度、峰度及样本方差的无偏估计。样本方差用 n−1（贝塞尔校正）时记 s²。"
+    },
+    {
+      "id": "ps-bayes",
+      "title": "贝叶斯定理：由先验概率与似然更新出后验概率",
+      "domain": "数学/概率统计/贝叶斯推断",
+      "level": "基础",
+      "latex": "P(A\\mid B)=\\frac{P(B\\mid A)\\,P(A)}{P(B)}",
+      "meaning": "贝叶斯定理：由先验概率与似然更新出后验概率。",
+      "variables": {
+        "P(A)": "先验概率 (无量纲)",
+        "P(B|A)": "似然 (无量纲)",
+        "P(B)": "边缘概率/证据 (无量纲)",
+        "P(A|B)": "后验概率 (无量纲)"
+      },
+      "dimension": "无量纲",
+      "source": "https://en.wikipedia.org/wiki/Bayes%27_theorem",
+      "notes": "核验等级 B（页面存在与表述由检索命中确认；wikipedia.org 直连抓取本会话返回 404）。连续情形把 P 换成密度、求和换积分。"
+    },
+    {
+      "id": "ps-clt",
+      "title": "中心极限定理：独立同分布、方差有限的样本均值标准化后依分布收敛到标准正态",
+      "domain": "数学/概率统计/极限定理",
+      "level": "派生",
+      "latex": "\\frac{\\bar{X}-\\mu}{\\sigma/\\sqrt{n}}\\;\\xrightarrow{\\;d\\;}\\;\\mathcal{N}(0,1)",
+      "meaning": "中心极限定理：独立同分布、方差有限的样本均值标准化后依分布收敛到标准正态。",
+      "variables": {
+        "X_bar": "样本均值 (同 X 单位)",
+        "mu": "总体均值 (同 X 单位)",
+        "sigma": "总体标准差 (同 X 单位)",
+        "n": "样本量 (无量纲)"
+      },
+      "dimension": "无量纲",
+      "source": "https://mathworld.wolfram.com/NormalDistribution.html",
+      "notes": "核验等级 A（页面侧）：MathWorld 正态分布页明确陈述中心极限定理。标准化统计量无量纲；“依分布收敛”不等于“样本均值服从正态”。"
+    }
+  ]
+}
