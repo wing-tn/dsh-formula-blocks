@@ -106,7 +106,7 @@ window.__ModuleLoader__.load({
       num: '数字', var: '变量', const: '常量', op: '运算', fn: '函数',
       frac: '分式', sqrt: '根式', sup: '幂', sub: '下标', paren: '括号',
       sum: '求和', int: '积分', pd: '偏导', hat: '算符', mat: '矩阵',
-      call: '函数调用', neg: '负号', ph: '空位', seq: '并置',
+      call: '函数调用', neg: '负号', ph: '空位', seq: '并置', tex: 'LaTeX 块',
     };
 
     /* ------------------------------------------------------------------ *
@@ -118,6 +118,7 @@ window.__ModuleLoader__.load({
     const CONST = (key) => ({ k: 'const', id: uid(), key, sym: CONSTS[key].sym, name: CONSTS[key].name, value: CONSTS[key].value, unit: CONSTS[key].unit });
     const OP = (op, a = PH(), b = PH()) => ({ k: 'op', id: uid(), op, args: [a, b] });
     const SEQ = (args) => ({ k: 'seq', id: uid(), args: (args && args.length ? args : [PH()]) });
+    const TEX = (latex) => ({ k: 'tex', id: uid(), latex: String(latex || '') });
     const NEG = (a = PH()) => ({ k: 'neg', id: uid(), a });
     const FRAC = (a = PH(), b = PH()) => ({ k: 'frac', id: uid(), a, b });
     const SQRT = (a = PH()) => ({ k: 'sqrt', id: uid(), a });
@@ -145,7 +146,7 @@ window.__ModuleLoader__.load({
       op: ['args'], fn: ['args'], call: ['args'],
       frac: ['a', 'b'], sqrt: ['a'], sup: ['a', 'b'], sub: ['a', 'b'],
       neg: ['a'], paren: ['a'], sum: ['body', 'from', 'to'],
-      int: ['body', 'from', 'to'], pd: ['f'], hat: ['a'], mat: ['rows'], seq: ['args'],
+      int: ['body', 'from', 'to'], pd: ['f'], hat: ['a'], mat: ['rows'], seq: ['args'], tex: [],
     };
 
     function childNodes(node) {
@@ -341,6 +342,7 @@ window.__ModuleLoader__.load({
           return left + ' ' + op + ' ' + right;
         }
         case 'seq': return node.args.map((a) => toLatex(a, 4)).join('\\, ');
+        case 'tex': return node.latex || '';
         case 'neg': return '-' + toLatex(node.a, 3);
         case 'frac': return '\\frac{' + toLatex(node.a) + '}{' + toLatex(node.b) + '}';
         case 'sqrt': return '\\sqrt{' + toLatex(node.a) + '}';
@@ -450,6 +452,7 @@ window.__ModuleLoader__.load({
             });
             return out;
           }
+          case 'tex': unknown.push('LaTeX 块'); return null;
           case 'neg': return walk(n.a);
           case 'frac': { const A = walk(n.a); const B = walk(n.b); return (A && B) ? dimAdd(A, dimScale(B, -1)) : null; }
           case 'sqrt': return dimScale(walk(n.a), 0.5);
@@ -529,6 +532,7 @@ window.__ModuleLoader__.load({
           return '(' + l + (map[node.op] || (' ' + node.op + ' ')) + r + ')';
         }
         case 'seq': return '(' + node.args.map(toPython).join(' * ') + ')';
+        case 'tex': return '0  # LaTeX-only block';
         case 'neg': return '(-' + toPython(node.a) + ')';
         case 'frac': return '((' + toPython(node.a) + ')/(' + toPython(node.b) + '))';
         case 'sqrt': return 'sp.sqrt(' + toPython(node.a) + ')';
@@ -1043,6 +1047,27 @@ window.__ModuleLoader__.load({
       } catch (e) { return []; }
     }
 
+    function countTex(node) {
+      if (!node || typeof node !== 'object') return 0;
+      if (node.k === 'tex') return 1;
+      let n = 0;
+      for (const child of childNodes(node)) n += countTex(child);
+      return n;
+    }
+
+    function parseLatexOrTex(text) {
+      const raw = String(text || '');
+      // Commands the block IR cannot represent faithfully become a LaTeX-preserving block.
+      if (/\\mathcal|\\mathbb|\\mathbf|\\vec|\\prod|\\left|\\right|\\mid|\\begin|\\operatorname|\\substack|\\overset|\\underset|\\label|\\tag/.test(raw)) return TEX(raw);
+      try {
+        const parsed = parseMathInput(raw, 'latex');
+        if (!parsed || !isValidNode(parsed)) return TEX(raw);
+        return parsed;
+      } catch (e) {
+        return TEX(raw);
+      }
+    }
+
     function sortByPinned(list, pinned, keyOf) {
       const isPinned = (g) => pinned.indexOf(keyOf(g)) >= 0;
       return list.filter(isPinned).concat(list.filter((g) => !isPinned(g)));
@@ -1225,6 +1250,9 @@ window.__ModuleLoader__.load({
 .fb-preview-row{border-bottom:1px dashed rgba(148,163,184,.16);padding:8px 2px 10px;display:flex;flex-direction:column;gap:4px}
 .fb-preview-row:last-child{border-bottom:0}
 .fb-preview-row-name{font-size:10.5px;color:var(--dsw-alias-label-secondary,#8b95a9)}
+.fb-texblock{font-size:1em;max-width:100%;overflow-x:auto;padding:0 2px}
+.fb-textext{font-family:ui-monospace,Consolas,monospace;font-size:11px;white-space:pre-wrap;word-break:break-all}
+.fb-mathlive-host{min-height:140px;margin:8px 0}
 .fb-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
 .fb-item{border:1px solid var(--dsw-alias-border-l1,rgba(255,255,255,.1));background:var(--dsw-alias-bg-layer-2,rgba(255,255,255,.04));border-radius:9px;padding:7px 6px;cursor:grab;display:flex;flex-direction:column;align-items:center;gap:3px;transition:transform .12s ease,border-color .12s ease,background .12s ease;user-select:none;text-align:center}
 .fb-item:hover{transform:translateY(-1px);border-color:var(--fb-c,#4f8cff);background:var(--dsw-alias-bg-overlay,#232a3b)}
@@ -1257,9 +1285,10 @@ window.__ModuleLoader__.load({
 .fb-sqrt{display:inline-flex;align-items:flex-start;vertical-align:middle}
 .fb-rad{font-size:1.15em;margin-right:-1px;transform:translateY(.02em)}
 .fb-radicand{border-top:1.6px solid currentColor;padding:1px 3px 0 2px;line-height:1.2}
-.fb-sup,.fb-sub{font-size:.62em;line-height:1;vertical-align:super}
-.fb-sub{vertical-align:sub}
-.fb-base{display:inline-flex;align-items:center}
+.fb-sup,.fb-sub{font-size:.62em;line-height:1;position:relative;vertical-align:baseline;margin-left:0}
+.fb-sup{top:-.68em}
+.fb-sub{top:.30em}
+.fb-base{display:inline-block;margin-right:.01em}
 .fb-bigop{display:inline-flex;align-items:center;gap:2px;vertical-align:middle;padding:0 2px}
 .fb-limits{display:inline-flex;flex-direction:column;align-items:center;font-size:.42em;line-height:1.05;color:var(--dsw-alias-label-secondary,#c3cbdb)}
 .fb-int-body{display:inline-flex;align-items:center}
@@ -1524,6 +1553,8 @@ window.__ModuleLoader__.load({
           ]);
         case 'seq':
           return h(BlockShell, { key: node.id, node, ui, extraClass: 'fb-seq' }, node.args.map((a) => renderNode(a, ui)));
+        case 'tex':
+          return h(BlockShell, { key: node.id, node, ui, extraClass: 'fb-texblock' }, h(TexBlock, { latex: node.latex }));
         case 'neg':
           return h(BlockShell, { key: node.id, node, ui }, [h('span', { key: node.id + '-neg', className: 'fb-op' }, '−'), renderNode(node.a, ui)]);
         case 'frac':
@@ -1975,7 +2006,7 @@ window.__ModuleLoader__.load({
           ]),
           section('版权与使用说明', [
             h('div', { key: 'about', className: 'fb-about' }, [
-              h('div', { key: 'v', className: 'fb-about-strong' }, '公式积木 Formula Blocks v2.0.0'),
+              h('div', { key: 'v', className: 'fb-about-strong' }, '公式积木 Formula Blocks v2.1.0'),
               h('div', { key: 'c' }, '© 2026 公式积木插件作者。本插件以 MIT License 发布（可自由使用、修改、分发，保留版权声明）。'),
               h('div', { key: 'd' }, '第三方：React 由 DeepSeek Harness 宿主提供；本插件未打包第三方数学库。公式库中的常量数值参考 CODATA 2022 常用值，仅作计算提示，请以官方发布为准。'),
               h('div', { key: 'u' }, '使用说明：左侧选块或拖入空位拼装；右侧调变量单位/量纲/含义；“关卡”可完成示例；底部复制 LaTeX。数据默认只存本机浏览器，不上传服务器。'),
@@ -2175,7 +2206,75 @@ window.__ModuleLoader__.load({
       return h('div', { className: 'fb-katex', ref });
     }
 
-    function LatexPreviewModal({ project, onClose, copy }) {
+    function TexBlock({ latex }) {
+      const ready = useKatex();
+      if (!ready) return h('span', { className: 'fb-textext' }, String(latex || ''));
+      return h(KatexBlock, { latex: '\\displaystyle ' + String(latex || '') });
+    }
+
+    function MathLiveModal({ initialLatex, onInsert, onClose, copy }) {
+      const hostRef = useRef(null);
+      const fieldRef = useRef(null);
+      const [ready, setReady] = useState(false);
+      const [err, setErr] = useState('');
+      useEffect(() => {
+        let alive = true;
+        const addCss = (id, href) => {
+          if (document.getElementById(id)) return;
+          const link = document.createElement('link');
+          link.id = id; link.rel = 'stylesheet'; link.href = href;
+          document.head.appendChild(link);
+        };
+        addCss('fb-mathlive-fonts', '/formula-blocks/assets/mathlive/mathlive-fonts.css');
+        addCss('fb-mathlive-static', '/formula-blocks/assets/mathlive/mathlive-static.css');
+        import('/formula-blocks/assets/mathlive/mathlive.min.mjs').then(() => {
+          if (!alive || !hostRef.current) return;
+          const el = document.createElement('math-field');
+          el.style.width = '100%';
+          el.style.minHeight = '130px';
+          el.style.fontSize = '22px';
+          el.style.background = 'var(--dsw-alias-bg-layer-1,#171b26)';
+          el.style.color = 'var(--dsw-alias-label-primary,#eef2fa)';
+          el.style.border = '1px solid rgba(148,163,184,.3)';
+          el.style.borderRadius = '10px';
+          el.style.padding = '8px';
+          try { el.value = initialLatex || ''; } catch (e) { /* ignore */ }
+          hostRef.current.appendChild(el);
+          fieldRef.current = el;
+          setReady(true);
+        }).catch((e) => { if (alive) setErr('MathLive 加载失败：' + ((e && e.message) || e)); });
+        return () => { alive = false; };
+      }, [initialLatex]);
+      const getLatex = () => {
+        try {
+          const el = fieldRef.current;
+          if (!el) return '';
+          const v = typeof el.getValue === 'function' ? el.getValue() : el.value;
+          return String(v || '');
+        } catch (e) { return ''; }
+      };
+      return h('div', { className: 'fb-modal', onClick: onClose }, h('div', {
+        className: 'fb-modal-card', onClick: (e) => e.stopPropagation(),
+      }, [
+        h('div', { key: 'h', className: 'fb-modal-head' }, [
+          h('div', { key: 't', className: 'fb-modal-title' }, 'MathLive 专业输入'),
+          h('button', { key: 'x', className: 'fb-iconbtn', onClick: onClose }, '✕'),
+        ]),
+        h('div', { key: 'b', className: 'fb-modal-body' }, [
+          h('div', { key: 'n', className: 'fb-set-note' }, '所见即所得输入（MathLive 内核，本地加载）。输入完成后插入当前行；复杂公式会作为 LaTeX 保真块。'),
+          h('div', { key: 'host', ref: hostRef, className: 'fb-mathlive-host' }),
+          !ready && !err ? h('div', { key: 'l', className: 'fb-set-note' }, 'MathLive 加载中…') : null,
+          err ? h('div', { key: 'e', className: 'fb-import-err' }, err) : null,
+          h('div', { key: 'btns', className: 'fb-set-btns' }, [
+            h('button', { key: 'i', className: 'fb-toolbtn fb-primary', disabled: !ready, onClick: () => onInsert(getLatex()) }, '插入当前行'),
+            h('button', { key: 'c', className: 'fb-toolbtn', onClick: () => copy(getLatex()) }, '复制 LaTeX'),
+            h('button', { key: 'x2', className: 'fb-toolbtn', onClick: onClose }, '关闭'),
+          ]),
+        ]),
+      ]));
+    }
+
+    function LatexPreviewModal({ project, onClose, copy, onExport }) {
       const rows = project.rows;
       return h('div', { className: 'fb-modal', onClick: onClose }, h('div', {
         className: 'fb-modal-card fb-preview-card', onClick: (e) => e.stopPropagation(),
@@ -2190,6 +2289,9 @@ window.__ModuleLoader__.load({
             h('div', { key: 'n', className: 'fb-preview-row-name' }, (i + 1) + '. ' + row.name),
             h(KatexBlock, { key: 'k', latex: toLatex(row.root) }),
             h('button', { key: 'c', className: 'fb-toolbtn', onClick: () => copy('$$ ' + toLatex(row.root) + ' $$') }, '复制 $$…$$'),
+            h('button', { key: 'png', className: 'fb-toolbtn', onClick: () => onExport('png', row.root) }, 'PNG'),
+            h('button', { key: 'jpg', className: 'fb-toolbtn', onClick: () => onExport('jpg', row.root) }, 'JPG'),
+            h('button', { key: 'pdf', className: 'fb-toolbtn', onClick: () => onExport('pdf', row.root) }, 'PDF'),
           ])),
         ]),
       ]));
@@ -2698,6 +2800,7 @@ window.__ModuleLoader__.load({
       const [reviewOpen, setReviewOpen] = useState(false);
       const [tutorialOpen, setTutorialOpen] = useState(false);
       const [latexPreviewOpen, setLatexPreviewOpen] = useState(false);
+      const [mathLiveOpen, setMathLiveOpen] = useState(false);
       const [graphReset, setGraphReset] = useState(0);
       const [lastDrop, setLastDrop] = useState(null);
       const [drag, setDrag] = useState(null);
@@ -2744,20 +2847,23 @@ window.__ModuleLoader__.load({
         const pending = rows.reduce((n, x) => n + x.empty, 0);
         const unknown = rows.reduce((n, x) => n + (x.empty ? 0 : x.info.unknown.length), 0);
         const allComplete = rows.length > 0 && rows.every((x) => x.empty === 0);
+        const texCount = rows.reduce((n, x) => n + countTex(x.row.root), 0);
         const backendOk = checkState.status === 'done' && checkState.ok === true;
         const backendBad = checkState.status === 'done' && checkState.ok === false;
         const backendRunning = checkState.status === 'running';
         const lamp = errors ? 'red'
-          : ((!allComplete || unknown > 0) ? 'yellow' : ((backendOk || agentChecked) ? 'green' : 'yellow'));
+          : ((!allComplete || unknown > 0) ? 'yellow'
+            : (texCount > 0 ? 'yellow' : ((backendOk || agentChecked) ? 'green' : 'yellow')));
         const reason = errors ? ('量纲/结构问题 ' + errors + ' 处')
           : (!allComplete ? ('还有 ' + pending + ' 个空位')
             : (unknown > 0 ? ('还有 ' + unknown + ' 个量纲待标注')
-              : (backendOk ? ('Python 后端检查通过' + (checkState.backend && checkState.backend.sympy ? '（SymPy）' : ''))
-                : (agentChecked ? '手动标记 Agent 已复核'
-                  : (backendRunning ? 'Python 后端检测中…'
-                    : (backendBad ? ('Python 检查未通过：' + (checkState.message || '见审核'))
-                      : '待 Python 后端复核（本地检查通过）'))))));
-        return { rows, errors, pending, unknown, allComplete, lamp, reason, backendOk, backendBad };
+              : (texCount > 0 ? ('含 ' + texCount + ' 个 LaTeX 保真块，无法自动做 Python 验证')
+                : (backendOk ? ('Python 后端检查通过' + (checkState.backend && checkState.backend.sympy ? '（SymPy）' : ''))
+                  : (agentChecked ? '手动标记 Agent 已复核'
+                    : (backendRunning ? 'Python 后端检测中…'
+                      : (backendBad ? ('Python 检查未通过：' + (checkState.message || '见审核'))
+                        : '待 Python 后端复核（本地检查通过）')))))));
+        return { rows, errors, pending, unknown, allComplete, texCount, lamp, reason, backendOk, backendBad };
       }, [doc, agentChecked, checkState]);
 
       const showToast = useCallback((msg) => {
@@ -2785,7 +2891,7 @@ window.__ModuleLoader__.load({
       }, []);
 
       useEffect(() => {
-        if (!projectChecks.allComplete) {
+        if (!projectChecks.allComplete || projectChecks.texCount > 0) {
           setCheckState((prev) => (prev.status === 'idle' ? prev : { status: 'idle', ok: null, message: '', results: [], backend: null }));
           return undefined;
         }
@@ -3494,7 +3600,7 @@ window.__ModuleLoader__.load({
 
       const applyLatexImport = useCallback(() => {
         try {
-          const parsed = parseMathInput(latexText, 'latex');
+          const parsed = parseLatexOrTex(latexText);
           setLatexError('');
           setLatexOpen(false);
           mutate(() => parsed, { selectFirstEmpty: true });
@@ -3526,7 +3632,7 @@ window.__ModuleLoader__.load({
         let failed = 0;
         cands.forEach((c, i) => {
           try {
-            const parsed = parseMathInput(c.latex, 'latex');
+            const parsed = parseLatexOrTex(c.latex);
             added.push({
               id: 'lit' + Date.now() + i,
               name: '文献公式 ' + (i + 1),
@@ -3543,7 +3649,7 @@ window.__ModuleLoader__.load({
       }, [mutate, showToast]);
 
       const insertFromLibrary = useCallback((item) => {        try {
-          const parsed = parseMathInput(item.latex, 'latex');
+          const parsed = parseLatexOrTex(item.latex);
           mutate(() => parsed, { selectFirstEmpty: true });
           showToast('已插入：' + (item.title || item.id));
         } catch (e) {
@@ -3554,12 +3660,40 @@ window.__ModuleLoader__.load({
 
       const importImageLatex = useCallback((text) => {
         try {
-          const parsed = parseMathInput(String(text || ''), 'latex');
+          const parsed = parseLatexOrTex(String(text || ''));
           mutate(() => parsed, { selectFirstEmpty: true });
           showToast('已从识图 LaTeX 导入');
         } catch (e) {
           showToast('解析失败：' + ((e && e.message) || e));
         }
+      }, [mutate, showToast]);
+
+      const exportFormula = useCallback(async (format, rootNode) => {
+        try {
+          showToast('正在生成 ' + String(format).toUpperCase() + '…');
+          const res = await apiPost('render', { latex: toLatex(rootNode || root), format, fontSize: 26 });
+          if (!res || !res.ok) throw new Error((res && res.message) || '渲染失败');
+          const a = document.createElement('a');
+          a.href = 'data:' + res.mime + ';base64,' + res.data;
+          a.download = 'formula-' + Date.now() + '.' + (format === 'jpeg' ? 'jpg' : format);
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          showToast('已导出 ' + String(format).toUpperCase());
+        } catch (e) {
+          showToast('导出失败：' + ((e && e.message) || e));
+        }
+      }, [root, showToast]);
+
+      const insertMathLive = useCallback((text) => {
+        const value = String(text || '').trim();
+        if (!value) { showToast('MathLive 输入为空'); return; }
+        try {
+          const node = parseLatexOrTex(value);
+          mutate(() => node, { selectFirstEmpty: true });
+          setMathLiveOpen(false);
+          showToast('已从 MathLive 插入');
+        } catch (e) { showToast('插入失败：' + ((e && e.message) || e)); }
       }, [mutate, showToast]);
 
       /* ---- projects / rows / review ---- */
@@ -4058,6 +4192,7 @@ window.__ModuleLoader__.load({
               }),
               h('button', { key: 'copy', className: 'fb-toolbtn fb-primary', onClick: () => copy(latex) }, '复制 LaTeX'),
               h('button', { key: 'saveblock', className: 'fb-toolbtn', onClick: openSaveBlock, title: '把选中块或整条公式存为左侧“我的整合块”' }, '★ 存为我的块'),
+              h('button', { key: 'mathlive', className: 'fb-toolbtn', onClick: () => setMathLiveOpen(true), title: '用 MathLive 所见即所得输入公式' }, 'MathLive 输入'),
               h('button', { key: 'katex', className: 'fb-toolbtn', onClick: () => setLatexPreviewOpen(true), title: '用 KaTeX 查看出版级排版预览' }, '排版预览'),
               view === 'graph' ? h('button', { key: 'layout', className: 'fb-toolbtn', onClick: () => setGraphReset((n) => n + 1), title: '恢复节点图的自动布局' }, '自动布局') : null,
             ]),
@@ -4305,7 +4440,14 @@ window.__ModuleLoader__.load({
           onClose: () => setHistoryOpen(false), onRestore: restoreHistory,
         }) : null,
         tutorialOpen ? h(TutorialModal, { key: 'tutorial', onClose: () => setTutorialOpen(false) }) : null,
-        latexPreviewOpen ? h(LatexPreviewModal, { key: 'latexpreview', project: doc, onClose: () => setLatexPreviewOpen(false), copy }) : null,
+        latexPreviewOpen ? h(LatexPreviewModal, {
+          key: 'latexpreview', project: doc, onClose: () => setLatexPreviewOpen(false), copy,
+          onExport: exportFormula,
+        }) : null,
+        mathLiveOpen ? h(MathLiveModal, {
+          key: 'mathlive', initialLatex: toLatex(root),
+          onInsert: insertMathLive, onClose: () => setMathLiveOpen(false), copy,
+        }) : null,
         settingsOpen ? h(SettingsPanel, {
           key: 'settings', settings, update: updateSettings, favorites,
           onClose: () => setSettingsOpen(false), copy,

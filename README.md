@@ -70,6 +70,15 @@ node --check index.js
 node --check client.js
 ```
 
+## 🆕 What's new in 2.1
+
+- **MathLive input**: a real MathLive 0.111.1 web-component editor loaded locally from `/formula-blocks/assets/mathlive/`; type WYSIWYG math, insert into the current row.
+- **LaTeX-preserving blocks**: formulas using `\mathcal`, `\prod`, `\vec`, `\left…\right`, `\mid`, `\begin…` are imported as a **LaTeX block** rendered by KaTeX instead of being silently mangled; they are marked non-verifiable (yellow lamp) because SymPy cannot check raw LaTeX.
+- **Image/PDF export**: the preview modal exports each row as **PNG / JPG / PDF** via a local matplotlib backend (`/api/render`), ready to paste into PPT.
+- **pix2tex OCR**: local pix2tex backend works when its model weights are present (`weights.pth`); recognition quality depends on the image — always review the LaTeX before inserting.
+- **Tighter sub/superscripts**:角标 closer to the corners of the base block.
+- Known limitation: React Flow / full graph kernel is **not** integrated yet; the graph remains the custom node view with auto-layout.
+
 ## 🆕 What's new in 2.0
 
 - **KaTeX publishing preview**: vendored KaTeX 0.16.22 (served locally by the Host), one click **排版预览** renders every row with publication-quality typesetting while editing stays block-based.

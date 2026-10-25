@@ -226,6 +226,7 @@ function sendJson(res, status, body) {
 
 const ASSET_TYPES = {
   '.js': 'text/javascript; charset=utf-8',
+  '.mjs': 'text/javascript; charset=utf-8',
   '.css': 'text/css; charset=utf-8',
   '.woff2': 'font/woff2',
   '.woff': 'font/woff',
@@ -234,6 +235,43 @@ const ASSET_TYPES = {
   '.png': 'image/png',
   '.json': 'application/json; charset=utf-8',
 };
+
+const RENDER_SCRIPT = [
+  'import sys, json, io, base64',
+  'import matplotlib',
+  'matplotlib.use("Agg")',
+  'import matplotlib.pyplot as plt',
+  'from matplotlib import rcParams',
+  'p = json.load(sys.stdin)',
+  'rcParams["mathtext.fontset"] = "cm"',
+  'latex = str(p.get("latex") or "")',
+  'fmt = str(p.get("format") or "png").lower()',
+  'dpi = int(p.get("dpi") or 220)',
+  'fontsize = float(p.get("fontSize") or 24)',
+  'fig = plt.figure(figsize=(0.01, 0.01), dpi=dpi)',
+  'fig.text(0, 0, latex, fontsize=fontsize, va="bottom", ha="left")',
+  'buf = io.BytesIO()',
+  'fig.savefig(buf, format=fmt, bbox_inches="tight", pad_inches=0.18, facecolor=p.get("background") or "white", transparent=False)',
+  'plt.close(fig)',
+  'sys.stdout.write(base64.b64encode(buf.getvalue()).decode())',
+].join('\n');
+
+async function renderFormula(latex, format, fontSize) {
+  const py = await detectPython(false);
+  if (!py.command) return { ok: false, message: '未检测到 Python，无法生成图片/PDF。' };
+  const probe = await runPython(py.command.concat(['-c', 'import importlib.util as u;print(1 if u.find_spec("matplotlib") else 0)']), '', 8000);
+  if (!(probe.ok && String(probe.stdout || '').trim() === '1')) {
+    return { ok: false, message: '未安装 matplotlib：python -m pip install matplotlib' };
+  }
+  const payload = JSON.stringify({ latex, format, fontSize: fontSize || 24 });
+  const run = await runPython(py.command.concat(['-c', RENDER_SCRIPT]), payload, 60000);
+  if (!run.ok || !run.stdout) {
+    return { ok: false, message: String(run.stderr || run.error || '渲染失败').slice(0, 800) };
+  }
+  const data = String(run.stdout).trim();
+  const mime = format === 'pdf' ? 'application/pdf' : (format === 'jpg' || format === 'jpeg' ? 'image/jpeg' : 'image/png');
+  return { ok: true, format, mime, data, bytes: Math.ceil(data.length * 0.75) };
+}
 
 function registerAssetRoute(webServer) {
   try {
@@ -560,6 +598,22 @@ function registerApi(webServer, ctx) {
         } catch (e) { /* ignore */ }
         const dir = resolveWorkspaceDir(ctx, sessionId) || os.homedir();
         sendJson(res, 200, { ok: true, entries: readHistory(dir, limit), dir });
+      },
+    }));
+    dispose.push(webServer.register({
+      kind: 'exact', path: '/formula-blocks/api/render',
+      async handler(req, res) {
+        if (!guard(req) || req.method !== 'POST') { sendJson(res, 403, { ok: false }); return; }
+        const raw = await readBody(req, 200_000);
+        if (!raw) { sendJson(res, 400, { ok: false, message: 'body too large' }); return; }
+        let body;
+        try { body = JSON.parse(raw); } catch (e) { sendJson(res, 400, { ok: false, message: 'invalid JSON' }); return; }
+        const latex = String(body && body.latex || '').slice(0, 5000);
+        const format = String(body && body.format || 'png').toLowerCase();
+        if (!latex || ['png', 'jpg', 'jpeg', 'pdf'].indexOf(format) < 0) {
+          sendJson(res, 400, { ok: false, message: 'latex/format required' }); return;
+        }
+        sendJson(res, 200, await renderFormula(latex, format, body.fontSize));
       },
     }));
     dispose.push(webServer.register({
